@@ -1,0 +1,7 @@
+POST http://localhost:3333/tasks
+Content-Type: application/json
+
+{
+    "title": "criar client http",
+    "description": "i have to create an http client to test the project F4F"
+}
