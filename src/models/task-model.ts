@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma";
+import {Prisma} from "@prisma/client"
 
 interface createTaskDTO{
     title: string,
@@ -41,5 +42,16 @@ export class TaskModel{
         } catch (error) {
             throw error
         }
+    }
+
+    static async getAllTasks({where, orderBy}: {where?: Prisma.TasksWhereInput, orderBy: "asc"| "desc"}){
+        const tasks = await prisma.tasks.findMany({
+            where: where,
+            orderBy: {
+                createdAt: orderBy
+            }
+        })
+
+        return tasks
     }
 }
