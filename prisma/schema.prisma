@@ -14,11 +14,15 @@ datasource db {
 model Tasks{
   id String @id @default(uuid())
   title String
-  parentId String? @map("parent_id")
   description String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @map("updated_at")
   isCompleted Boolean @default(false) @map("is_complete")
+  
+  parentId String? @map("parent_id")
+
+  ParentTask Tasks? @relation("SubTasks", fields: [parentId], references: [id])
+  SubTasks Tasks[] @relation("SubTasks")
 
   @@map("task")
 }
