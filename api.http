@@ -5,3 +5,12 @@ Content-Type: application/json
     "title": "criar client http",
     "description": "i have to create an http client to test the project F4F"
 }
+
+###
+
+GET http://localhost:3333/tasks
+Content-Type: application/json
+
+###
+
+GET http://localhost:3333/tasks/95e6c006-fb0c-475c-9683-3d452910b1e7
