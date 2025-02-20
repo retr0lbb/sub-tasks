@@ -11,6 +11,19 @@ export class TaskModel{
 
     static async createTask({title, description, parentId}: createTaskDTO){
         try {
+            
+            if(parentId){
+                const parentTask = await prisma.tasks.findUnique({
+                    where: {
+                        id: parentId
+                    }
+                })
+
+                if(!parentTask){
+                    throw new Error("Parent task not found")
+                }
+            }
+
             const result = await prisma.tasks.create({
                 data: {
                     title,
