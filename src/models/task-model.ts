@@ -67,4 +67,25 @@ export class TaskModel{
 
         return tasks
     }
+
+    static async getSubtasksFromTask({taskId}: {taskId:string}){
+        const task = await prisma.tasks.findUnique({
+            where: {
+                id: taskId
+            },
+            include: {
+                SubTasks: true
+            }
+        })
+
+        if(!task){
+            throw new Error("cannot find task")
+        }
+
+        if(task.SubTasks.length <= 0){
+            return null
+        }
+
+        return { subtasks: task.SubTasks }
+    }
 }
