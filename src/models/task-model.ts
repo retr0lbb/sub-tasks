@@ -1,5 +1,7 @@
 import { prisma } from "../lib/prisma";
 import {Prisma} from "@prisma/client"
+import {getAllTasksQueryParamsSchema} from "../routes/get-all-tasks"
+import z, { number } from "zod";
 
 interface createTaskDTO{
     title: string,
@@ -68,7 +70,7 @@ export class TaskModel{
         return tasks
     }
 
-    static async organizeTasksBySubtasks() {
+    static async organizeTasksBySubtasks(options?: z.infer<typeof getAllTasksQueryParamsSchema>) {
         interface TaskInterface {
             id: string;
             title: string;
@@ -77,16 +79,21 @@ export class TaskModel{
             isCompleted: boolean;
             subTasks: TaskInterface[];
         }
+
+        const numberPerPage = 10
     
         const topLevelTasks = await prisma.tasks.findMany({
-            where: { parentId: null },
+            where: { parentId: null, isCompleted: options?.uncompleted_only? true: undefined},
+            take: numberPerPage,
+            skip: options?.page? options.page* numberPerPage : 0,
             include: { SubTasks: true }
         });
     
-        // Função recursiva para formatar as tarefas corretamente
+
         async function formatTask(task: Omit<TaskInterface, "subTasks"> & { SubTasks: any[] }): Promise<TaskInterface> {
             const subTasks = await prisma.tasks.findMany({
                 where: { parentId: task.id },
+                take: options?.max_depth? options.max_depth: undefined, 
                 include: { SubTasks: true }
             });
     

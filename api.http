@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ###
 # get all tasks and divide by subtasks
-GET http://localhost:3333/tasks
+GET http://localhost:3333/tasks?page=0&max_depth=2
 Content-Type: application/json
 
 ###
