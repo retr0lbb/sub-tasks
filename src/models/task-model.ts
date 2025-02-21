@@ -68,6 +68,52 @@ export class TaskModel{
         return tasks
     }
 
+    static async organizeTasksBySubtasks() {
+        interface TaskInterface {
+            id: string;
+            title: string;
+            description: string | null;
+            createdAt: Date;
+            isCompleted: boolean;
+            subTasks: TaskInterface[];
+        }
+    
+        const topLevelTasks = await prisma.tasks.findMany({
+            where: { parentId: null },
+            include: { SubTasks: true }
+        });
+    
+        // Função recursiva para formatar as tarefas corretamente
+        async function formatTask(task: Omit<TaskInterface, "subTasks"> & { SubTasks: any[] }): Promise<TaskInterface> {
+            const subTasks = await prisma.tasks.findMany({
+                where: { parentId: task.id },
+                include: { SubTasks: true }
+            });
+    
+            return {
+                id: task.id,
+                title: task.title,
+                description: task.description,
+                createdAt: task.createdAt,
+                isCompleted: task.isCompleted,
+                subTasks: await Promise.all(
+                    subTasks.map(sub =>
+                        formatTask({
+                            id: sub.id,
+                            title: sub.title,
+                            description: sub.description,
+                            createdAt: sub.createdAt,
+                            isCompleted: sub.isCompleted,
+                            SubTasks: sub.SubTasks
+                        })
+                    )
+                )
+            };
+        }
+    
+        return Promise.all(topLevelTasks.map(formatTask));
+    }
+
     static async getSubtasksFromTask({taskId}: {taskId:string}){
         const task = await prisma.tasks.findUnique({
             where: {

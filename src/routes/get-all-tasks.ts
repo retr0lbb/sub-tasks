@@ -9,7 +9,7 @@ export async function getAllTasksRoute(app: FastifyInstance){
 
 async function getAllTasksHandler(request: FastifyRequest, reply: FastifyReply){
 
-    const task = await TaskModel.getAllTasks({orderBy: "asc"})
+    const task = await TaskModel.organizeTasksBySubtasks()
 
     reply.status(200).send({
         data: task

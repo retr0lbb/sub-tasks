@@ -14,9 +14,13 @@ const paramsSchema = z.object({
 async function getSubtasksFromATaskHandler(request: FastifyRequest, reply: FastifyReply){
     const {taskId} = paramsSchema.parse(request.params)
 
-    const subtasks = await TaskModel.getSubtasksFromTask({taskId})
+    const sub = await TaskModel.getSubtasksFromTask({taskId})
+
+    if(!sub){
+        return reply.status(404).send({message: "subtasksNotFound"})
+    }
 
     return reply.status(200).send({
-        subtasks: subtasks? subtasks : []
+        subtasks: sub.subtasks
     })
 }
