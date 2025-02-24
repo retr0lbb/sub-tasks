@@ -19,7 +19,7 @@ async function getAllTasksHandler(request: FastifyRequest, reply: FastifyReply){
 
     const options = getAllTasksQueryParamsSchema.parse(request.query)
 
-    const task = await getTasksAndSubtasks()
+    const task = await getTasksAndSubtasks(options)
 
     reply.status(200).send({
         data: task
