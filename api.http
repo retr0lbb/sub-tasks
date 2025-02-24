@@ -19,3 +19,7 @@ GET http://localhost:3333/tasks/95e6c006-fb0c-475c-9683-3d452910b1e7
 ###
 # get a list of subtasks from a task
 GET http://localhost:3333/task/645e5f24-6990-4ea7-97e6-b02f395ddaa9/sub
+
+###
+
+POST http://localhost:3333/task/645e5f24-6990-4ea7-97e6-b02f395ddaa9/complete

@@ -1,7 +1,7 @@
 import { prisma } from "../lib/prisma";
 import {Prisma} from "@prisma/client"
 import {getAllTasksQueryParamsSchema} from "../routes/get-all-tasks"
-import z, { number } from "zod";
+import { z } from "zod";
 
 interface createTaskDTO{
     title: string,
@@ -119,6 +119,43 @@ export class TaskModel{
         }
     
         return Promise.all(topLevelTasks.map(formatTask));
+    }
+
+    static async completeTask({taskId}: {taskId:string}){
+        const task = await prisma.tasks.findUnique({
+            where: {
+                id: taskId
+            }
+        })
+
+        if(!task){
+            throw new Error("Task not found")
+        }
+
+        async function completeSubtask(taskId: string){
+            const subtasks = await prisma.tasks.findMany({
+                where: {
+                    parentId: taskId
+                }
+            })
+
+            await prisma.tasks.update({
+                where: {
+                    id: taskId
+                },
+                data: {
+                    isCompleted: true,
+                    updatedAt: new Date()
+                }
+            })
+
+            for (const subtask of subtasks){
+                await completeSubtask(subtask.id)
+            }
+        }
+
+        completeSubtask(taskId)
+        
     }
 
     static async getSubtasksFromTask({taskId}: {taskId:string}){
