@@ -2,24 +2,20 @@ POST http://localhost:3333/tasks
 Content-Type: application/json
 
 {
-    "title": "turn1 and turn2",
+    "title": "achar loja de mochila personalizada",
     "description": "",
-    "parentId": "1d4ee4b9-5b53-4185-8044-35786a947024"
+    "parentId": "b89be282-fceb-45da-bf9a-2158081cd624"
 }
 
 ###
-# get all tasks and divide by subtasks
+//get all tasks and divide by subtasks
 GET http://localhost:3333/tasks?page=0&max_depth=2
 Content-Type: application/json
 
 ###
-# get an especific task
-GET http://localhost:3333/tasks/95e6c006-fb0c-475c-9683-3d452910b1e7
+//get an especific task
+GET http://localhost:3333/tasks/145972c3-9a61-409b-85f8-35002039f074
 
 ###
-# get a list of subtasks from a task
-GET http://localhost:3333/task/645e5f24-6990-4ea7-97e6-b02f395ddaa9/sub
-
-###
-
+// complete an task and their subtasks
 POST http://localhost:3333/task/645e5f24-6990-4ea7-97e6-b02f395ddaa9/complete

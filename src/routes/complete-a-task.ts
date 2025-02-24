@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod"
-import { TaskModel } from "../models/task-model";
+import { completeTask } from "../handlers/complete-task-handler";
 
 
 export async function completeTaskRoute(app: FastifyInstance){
@@ -14,9 +14,8 @@ const requestParams = z.object({
 async function completeTaskRouteHandler(request: FastifyRequest, reply: FastifyReply){
 
     const {taskId} = requestParams.parse(request.params)
-
-    TaskModel.completeTask({taskId: taskId})
-
+    completeTask({taskId})
+    
     return reply.status(200).send({
         message: "Task created sucessfully task updated Sucessfully"
     })
