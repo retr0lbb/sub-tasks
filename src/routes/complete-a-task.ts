@@ -1,23 +1,27 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod"
-import { completeTask } from "../handlers/complete-task-handler";
+import { toggleTaskCompletion } from "../handlers/complete-task-handler";
 import { ServerError } from "../errors/server.error";
 
 
-export async function completeTaskRoute(app: FastifyInstance){
-    app.post("/task/:taskId/complete", completeTaskRouteHandler)
+export async function toggleTaskCompletionRoute(app: FastifyInstance){
+    app.post("/task/:taskId/complete", toggleTaskCompletionRouteHandler)
 }
 
 const requestParams = z.object({
     taskId: z.string().uuid()
 })
 
-async function completeTaskRouteHandler(request: FastifyRequest, reply: FastifyReply){
+const requestBody = z.object({
+    completion: z.coerce.boolean()
+})
+
+async function toggleTaskCompletionRouteHandler(request: FastifyRequest, reply: FastifyReply){
 
     const {taskId} = requestParams.parse(request.params)
-
+    const {completion} = requestBody.parse(request.body)
     try {
-        completeTask({taskId})
+        toggleTaskCompletion({taskId, completion})
         return reply.status(200).send({
             message: "Task created sucessfully task updated Sucessfully"
         })
