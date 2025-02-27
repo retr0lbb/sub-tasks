@@ -1,3 +1,4 @@
+import { ClientError } from "../errors/client-error"
 import { prisma } from "../lib/prisma"
 
 interface CreateTaskParams{
@@ -14,8 +15,8 @@ export async function createTask({title, description, parentId}: CreateTaskParam
                     id: parentId
                 }
             })
-            if(!parentTask){
-                throw new Error("Parent task not found")
+            if(parentTask === null){
+                throw new ClientError("Parent task not found")
             }
         }
         const result = await prisma.tasks.create({

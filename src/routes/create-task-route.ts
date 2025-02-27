@@ -22,6 +22,7 @@ async function createTaskHandler(request: FastifyRequest, reply: FastifyReply){
             data: data
         })
     } catch (error) {
+        console.log(error)
         throw new ServerError("An error occurred creating task")
     }
 }
