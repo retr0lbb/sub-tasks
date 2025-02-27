@@ -1,3 +1,4 @@
+import { ClientError } from "../errors/client-error"
 import { prisma } from "../lib/prisma"
 
 interface getTaskParams {
@@ -13,7 +14,7 @@ export async function getTask({id}: getTaskParams){
         })
 
         if(!task){
-            throw new Error("Task not found")
+            throw new ClientError("Task not found")
         }
 
         return task
