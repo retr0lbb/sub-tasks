@@ -12,7 +12,7 @@ vi.mock("../lib/prisma", () => ({
         findUnique: vi.fn()
       },
     },
-  }));
+}));
 
 
 describe("it should get one task", async () => {

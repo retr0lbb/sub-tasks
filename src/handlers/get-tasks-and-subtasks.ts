@@ -1,15 +1,18 @@
 import { takeCoverage } from "v8";
 import { prisma } from "../lib/prisma";
+import { transferableAbortController } from "util";
+import { ClientError } from "../errors/client-error";
 
-interface getTasksAndSubtasksOptions{
+export interface getTasksAndSubtasksOptions{
     uncompleted_only?: boolean | undefined;
     from?: string | undefined;
     to?: string | undefined;
     page?: number | undefined;
     max_depth?: number | undefined;
+    numbersPerpage?: number
 }
 
-interface TaskInterface {
+export interface TaskInterface {
     id: string;
     title: string;
     description: string | null;
@@ -18,36 +21,39 @@ interface TaskInterface {
     subTasks: TaskInterface[];
 }
 
-export async function getTasksAndSubtasks( options: getTasksAndSubtasksOptions) {
-        const numberPerPage = 10
+export async function getTasksAndSubtasks(options: getTasksAndSubtasksOptions) {
+    const numberPerPage = options.numbersPerpage ?? 10
+    const allTasks = await prisma.tasks.findMany({
+        where: { isCompleted: options.uncompleted_only },
+        include: { SubTasks: true }
+    })
 
-        const allTasks = await prisma.tasks.findMany({
-            where: {isCompleted: options.uncompleted_only},
-            include: { SubTasks: true }
+    const taskMap = new Map<string, TaskInterface>();
+    allTasks.forEach(task => {
+        taskMap.set(task.id, {
+            id: task.id,
+            isCompleted: task.isCompleted,
+            title: task.title,
+            description: task.description,
+            createdAt: task.createdAt,
+            subTasks: []
         })
+    })
 
-        const taskMap = new Map<string, TaskInterface>();
+    allTasks.forEach(task => {
+        if(task.parentId && taskMap.has(task.parentId)){
+            taskMap.get(task.parentId)!.subTasks.push(taskMap.get(task.id)!)
+        }
+    })
 
+    const topLevelTasks = Array.from(taskMap.values()).filter(task => !allTasks.some(t => t.id === task.id && t.parentId));
+    const startIndex = (options.page? (options.page > 0? options.page-1: 0): 0) * numberPerPage;
 
-        allTasks.forEach(task => {
-            taskMap.set(task.id, {
-                id: task.id,
-                isCompleted: task.isCompleted,
-                title: task.title,
-                description: task.description,
-                createdAt: task.createdAt,
-                subTasks: []
-            })
-        })
+    const tasks = topLevelTasks.slice(startIndex, startIndex + numberPerPage)
 
-        allTasks.forEach(task => {
-            if(task.parentId && taskMap.has(task.parentId)){
-                taskMap.get(task.parentId)!.subTasks.push(taskMap.get(task.id)!)
-            }
-        })
-
-        const topLevelTasks = Array.from(taskMap.values()).filter(task => !allTasks.some(t => t.id === task.id && t.parentId));
-    
-        const startIndex = (options.page ?? 0) * numberPerPage;
-        return topLevelTasks.slice(startIndex, startIndex + numberPerPage);
+    if(topLevelTasks.length < numberPerPage * (options.page ?? 0)){
+        throw new ClientError("Page incorrect")
     }
+
+    return {tasks: tasks, numberOfEntries: topLevelTasks.length};
+}
