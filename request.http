@@ -1,11 +1,18 @@
 ###
-http://localhost:3333/tasks/projectID
+POST http://localhost:3333/project/7a62f62a-0e20-4bcf-a7a7-6b9476a29425/tasks
+Content-Type: application/json
+
+{
+    "title":"Criar autenticação JWT",
+    "description":"Criar e sobrescrever jpa security com Oauth2",
+    "parentID": null
+}
 
 ###
 POST http://localhost:3333/project
 content-type: application/json
 
 {
-    "name":"House-keeper",
+    "name":"House-keeper2",
     "description":"um projeto de automação residencial e IoT."
 }

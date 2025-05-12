@@ -4,7 +4,7 @@ import { getAllTasksByProject } from "../handlers/get-tasks-by-project";
 import { prisma } from "../lib/prisma";
 
 export async function getAllTasksRoute(app: FastifyInstance) {
-	app.get("/tasks/:projectId", getAllTasksHandler);
+	app.get("/project/:projectId/tasks", getAllTasksHandler);
 }
 
 const params = z.object({

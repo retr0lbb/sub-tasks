@@ -5,7 +5,7 @@ import { prisma } from "../lib/prisma";
 import { ServerError } from "../errors/server.error";
 
 export async function createProjectRoute(app: FastifyInstance) {
-	app.post("/project", () => {});
+	app.post("/project", createProjectHandler);
 }
 
 const Body = z.object({

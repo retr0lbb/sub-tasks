@@ -4,7 +4,7 @@ import { toggleTaskCompletion } from "../handlers/complete-task-handler";
 import { ServerError } from "../errors/server.error";
 
 export async function toggleTaskCompletionRoute(app: FastifyInstance) {
-	app.post("/task/:taskId/complete", toggleTaskCompletionRouteHandler);
+	app.put("/task/:taskId/complete", toggleTaskCompletionRouteHandler);
 }
 
 const requestParams = z.object({
