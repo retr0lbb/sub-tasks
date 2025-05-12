@@ -12,7 +12,7 @@ app.setErrorHandler(errorHandler);
 
 app.register(createTaskRoute);
 //app.register(getTaskRoute);
-//app.register(getAllTasksRoute);
+app.register(getAllTasksRoute);
 app.register(toggleTaskCompletionRoute);
 app.register(createProjectRoute);
 
