@@ -1,27 +1,25 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import {string, z} from "zod"
-import { getTasksAndSubtasks } from "../handlers/get-tasks-and-subtasks";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { z } from "zod";
+import { getAllTasksByProject } from "../handlers/get-tasks-by-project";
+import { prisma } from "../lib/prisma";
 
-
-export async function getAllTasksRoute(app: FastifyInstance){
-    app.get("/tasks", getAllTasksHandler)
+export async function getAllTasksRoute(app: FastifyInstance) {
+	app.get("/tasks/:projectId", getAllTasksHandler);
 }
 
-const getAllTasksQueryParamsSchema = z.object({
-    uncompleted_only: z.coerce.boolean().optional(),
-    from: z.string().optional(),
-    to: z.string().optional(),
-    page: z.coerce.number().optional(),
-    max_depth: z.coerce.number().optional()
-})
+const params = z.object({
+	projectId: z.string().uuid(),
+});
 
-async function getAllTasksHandler(request: FastifyRequest, reply: FastifyReply){
+async function getAllTasksHandler(
+	request: FastifyRequest,
+	reply: FastifyReply,
+) {
+	const { projectId } = params.parse(request.params);
 
-    const options = getAllTasksQueryParamsSchema.parse(request.query)
+	const task = await getAllTasksByProject(prisma, { projectId });
 
-    const task = await getTasksAndSubtasks(options)
-
-    reply.status(200).send({
-        data: task
-    })
+	reply.status(200).send({
+		data: task,
+	});
 }

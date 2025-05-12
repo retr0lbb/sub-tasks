@@ -1,0 +1,11 @@
+###
+http://localhost:3333/tasks/projectID
+
+###
+POST http://localhost:3333/project
+content-type: application/json
+
+{
+    "name":"House-keeper",
+    "description":"um projeto de automação residencial e IoT."
+}
