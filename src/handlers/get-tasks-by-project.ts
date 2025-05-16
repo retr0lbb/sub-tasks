@@ -25,32 +25,52 @@ export async function getAllTasksByProject(
 			projectIdId: data.projectId,
 			parentId: null,
 		},
+		omit: {
+			projectIdId: true,
+		},
 	});
 
-	if (topLevelTasks.length <= 0) {
-		throw new ClientError("No tasks found");
+	if (topLevelTasks.length === 0) {
+		return [];
 	}
 
-	return topLevelTasks;
+	const allTasks = await Promise.all(
+		topLevelTasks.map(async (task) => {
+			return await recursiveGetSubtasks(db, task);
+		}),
+	);
+	return allTasks;
+}
+
+interface TaskWithSubtasks {
+	id: string;
+	description: string | null;
+	title: string;
+	createdAt: Date;
+	updatedAt: Date | null;
+	isCompleted: boolean;
+	parentId: string | null;
+	subTasks: TaskWithSubtasks[];
 }
 
 async function recursiveGetSubtasks(
 	db: PrismaClient,
-	parentId: string,
-	projectId: string,
-) {
+	task: Omit<TaskWithSubtasks, "subTasks"> | null,
+): Promise<TaskWithSubtasks> {
+	if (!task) throw new ClientError("Task not found");
+
 	const subtasks = await db.tasks.findMany({
 		where: {
-			parentId: parentId,
-			projectIdId: projectId,
+			parentId: task.id,
 		},
 	});
 
-	if (subtasks.length === 0) {
-		return;
-	}
+	const formattedSubtasks = await Promise.all(
+		subtasks.map(async (sub) => await recursiveGetSubtasks(db, sub)),
+	);
 
-	for (const task of subtasks) {
-		await recursiveGetSubtasks(db, task.id, projectId);
-	}
+	return {
+		...task,
+		subTasks: formattedSubtasks,
+	};
 }
