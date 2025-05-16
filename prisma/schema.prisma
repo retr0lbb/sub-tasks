@@ -18,6 +18,7 @@ model Users{
 
   @@map("users")
   Tasks Tasks[]
+  Projects Projects[]
 }
 
 model Projects{
@@ -26,6 +27,9 @@ model Projects{
   description String
 
   tasks Tasks[]
+  
+  userId String?
+  Users Users? @relation(fields: [userId], references: [id])
 
   @@map("projects")
 }
