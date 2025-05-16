@@ -42,3 +42,6 @@ Content-Type: application/json
 {
     "parentId": null
 }
+
+###
+DELETE http://localhost:3333/tasks/5df25fde-ca43-49df-a3ae-d6a0043f7fba

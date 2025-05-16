@@ -6,6 +6,7 @@ import { toggleTaskCompletionRoute } from "./routes/complete-a-task";
 import { errorHandler } from "./errors/error-handler";
 import { createProjectRoute } from "./routes/create-project";
 import { updateTaskRoute } from "./routes/updateTask";
+import { deleteTaskRoute } from "./routes/delete-task";
 
 const app = fastify();
 
@@ -14,9 +15,10 @@ app.setErrorHandler(errorHandler);
 app.register(createTaskRoute);
 app.register(getAllTasksRoute);
 app.register(toggleTaskCompletionRoute);
-app.register(createProjectRoute);
+app.register(deleteTaskRoute);
 app.register(getTaskRoute);
 app.register(updateTaskRoute);
+app.register(createProjectRoute);
 
 app
 	.listen({

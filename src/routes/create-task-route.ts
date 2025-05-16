@@ -32,7 +32,7 @@ async function createTaskHandler(request: FastifyRequest, reply: FastifyReply) {
 		});
 
 		return reply.status(201).send({
-			message: "Task created sucessfully",
+			message: "Task created successfully",
 			data: data,
 		});
 	} catch (error) {
