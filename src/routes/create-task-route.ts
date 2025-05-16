@@ -14,7 +14,11 @@ const Params = z.object({
 });
 
 export async function createTaskRoute(app: FastifyInstance) {
-	app.post("/project/:projectId/tasks", createTaskHandler);
+	app.post(
+		"/project/:projectId/tasks",
+		{ onRequest: [app.authenticate] },
+		createTaskHandler,
+	);
 }
 
 async function createTaskHandler(request: FastifyRequest, reply: FastifyReply) {
@@ -29,6 +33,7 @@ async function createTaskHandler(request: FastifyRequest, reply: FastifyReply) {
 			description,
 			parentId,
 			projectId,
+			userId: "asr",
 		});
 
 		return reply.status(201).send({

@@ -8,15 +8,13 @@ import { createProjectRoute } from "./routes/create-project";
 import { updateTaskRoute } from "./routes/updateTask";
 import { deleteTaskRoute } from "./routes/delete-task";
 import { registerUserRoute } from "./routes/register-user";
-import { env } from "./utils/env";
 import { loginUserRoute } from "./routes/login-user";
+import jwtPlugin from "./lib/jwt-plugin";
 
 const app = fastify();
 app.setErrorHandler(errorHandler);
 
-app.register(require("@fastify/jwt"), {
-	secret: env.JWT_TOKEN_SECRET,
-});
+app.register(jwtPlugin);
 
 app.register(createTaskRoute);
 app.register(getAllTasksRoute);

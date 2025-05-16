@@ -1,7 +1,9 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../errors/client-error";
+import { requestUser } from "../../utils/request-user.type";
 
 interface CreateTaskParams {
+	userId: string;
 	title: string;
 	description?: string;
 	parentId?: string | null;
@@ -9,6 +11,18 @@ interface CreateTaskParams {
 }
 
 export async function createTask(db: PrismaClient, data: CreateTaskParams) {
+	if (!data.userId) {
+		throw new ClientError("You must be register to it");
+	}
+	const user = await db.users.findUnique({
+		where: {
+			id: data.userId,
+		},
+	});
+
+	if (!user) {
+		throw new Error("User not found in our database");
+	}
 	try {
 		if (data.parentId) {
 			const parentTask = await db.tasks.findUnique({
