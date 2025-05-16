@@ -23,5 +23,22 @@ Content-Type: application/json
 
 
 ### Get a specific task with its subtasks
-GET http://localhost:3333/tasks/5b60e461-8a57-4919-8c11-54bf275646b4
+GET http://localhost:3333/tasks/887e8d36-393e-41c1-b241-c62d3eb66008
 Content-Type: application/json
+
+### Toggle specific task completion with its subtasks
+PUT http://localhost:3333/tasks/5b60e461-8a57-4919-8c11-54bf275646b4/complete
+Content-Type: application/json
+
+{
+    "isCompleted":true
+}
+
+
+### UpdateTask info
+PATCH  http://localhost:3333/tasks/5df25fde-ca43-49df-a3ae-d6a0043f7fba
+Content-Type: application/json
+
+{
+    "parentId": null
+}

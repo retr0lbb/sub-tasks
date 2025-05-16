@@ -3,11 +3,11 @@ import { ClientError } from "../../errors/client-error";
 
 interface CompleteTaskParams {
 	taskId: string;
-	completion: boolean;
+	isCompleted: boolean;
 }
 
 export async function toggleTaskCompletion(
-	{ taskId, completion }: CompleteTaskParams,
+	{ taskId, isCompleted }: CompleteTaskParams,
 	db: PrismaClient,
 ) {
 	const task = await db.tasks.findUnique({
@@ -20,12 +20,6 @@ export async function toggleTaskCompletion(
 		throw new ClientError("Task not found");
 	}
 
-	if (task.isCompleted === completion) {
-		throw new ClientError(
-			`the task is already ${completion ? "completed" : "uncompleted"}`,
-		);
-	}
-
 	const tasksIdAndParentId = await getAllTaskIdsRecursively(task.id, db);
 	const taskIds = tasksIdAndParentId.map((item) => {
 		return item.id;
@@ -33,7 +27,8 @@ export async function toggleTaskCompletion(
 
 	await db.tasks.updateMany({
 		data: {
-			isCompleted: completion,
+			isCompleted,
+			updatedAt: new Date(),
 		},
 		where: {
 			id: { in: taskIds },

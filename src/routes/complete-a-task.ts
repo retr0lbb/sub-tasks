@@ -5,7 +5,7 @@ import { ServerError } from "../errors/server.error";
 import { prisma } from "../lib/prisma";
 
 export async function toggleTaskCompletionRoute(app: FastifyInstance) {
-	app.put("/task/:taskId/complete", toggleTaskCompletionRouteHandler);
+	app.put("/tasks/:taskId/complete", toggleTaskCompletionRouteHandler);
 }
 
 const requestParams = z.object({
@@ -13,7 +13,7 @@ const requestParams = z.object({
 });
 
 const requestBody = z.object({
-	completion: z.coerce.boolean(),
+	isCompleted: z.coerce.boolean(),
 });
 
 async function toggleTaskCompletionRouteHandler(
@@ -21,13 +21,13 @@ async function toggleTaskCompletionRouteHandler(
 	reply: FastifyReply,
 ) {
 	const { taskId } = requestParams.parse(request.params);
-	const { completion } = requestBody.parse(request.body);
+	const { isCompleted } = requestBody.parse(request.body);
 	try {
-		toggleTaskCompletion({ taskId, completion }, prisma);
+		toggleTaskCompletion({ taskId, isCompleted }, prisma);
 		return reply.status(200).send({
-			message: "Task created sucessfully task updated Sucessfully",
+			message: "task updated successfully!",
 		});
 	} catch (error) {
-		throw new ServerError("An error occured processing complete task");
+		throw new ServerError("An error occurred processing complete task!");
 	}
 }
