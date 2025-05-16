@@ -10,15 +10,17 @@ content-type: application/json
 ### Create a task with or without parentId but passing project ID.
 POST http://localhost:3333/project/465cf493-c444-43a0-87f6-9c2c2d3d1cc3/tasks
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjllMWMxMWYwLTIxMDctNGU4MS04OWU0LWFmMTc2NDBjYTU5MiIsImlhdCI6MTc0NzQxMzUwNSwiZXhwIjoxNzQ3NTg2MzA1fQ.2vBQsPL_GN3fvcBTtBpr6hYPlFVOYTaKF3ZmIUvW7cQ
+
 
 {
     "title":"Arrumar o link para o site das bolsas",
     "description":"coloquei o site de porno gay furry sem querer",
-    "parentId": "887e8d36-393e-41c1-b241-c62d3eb66008"
+    "parentId": null
 }
 
 ### Gets all tasks from a project passing the project ID.
-GET  http://localhost:3333/project/7a62f62a-0e20-4bcf-a7a7-6b9476a29425/tasks
+GET  http://localhost:3333/project/465cf493-c444-43a0-87f6-9c2c2d3d1cc3/tasks
 Content-Type: application/json
 
 
@@ -44,7 +46,7 @@ Content-Type: application/json
 }
 
 ### delete a task and its subtasks
-DELETE http://localhost:3333/tasks/5df25fde-ca43-49df-a3ae-d6a0043f7fba
+DELETE http://localhost:3333/tasks/63b9b19c-541d-41ea-a9ee-47dd40f586c1
 
 
 ### registers a new user

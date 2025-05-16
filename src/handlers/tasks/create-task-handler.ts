@@ -52,6 +52,7 @@ export async function createTask(db: PrismaClient, data: CreateTaskParams) {
 				description: data.description,
 				parentId: data.parentId,
 				projectIdId: data.projectId,
+				userId: data.userId,
 			},
 		});
 

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createTask } from "../handlers/tasks/create-task-handler";
 import { ServerError } from "../errors/server.error";
 import { prisma } from "../lib/prisma";
+import { requestUser } from "../utils/request-user.type";
 
 const createTaskBodySchema = z.object({
 	title: z.string().min(3, "cannot receive an title lesser than 3"),
@@ -26,6 +27,7 @@ async function createTaskHandler(request: FastifyRequest, reply: FastifyReply) {
 		request.body,
 	);
 	const { projectId } = Params.parse(request.params);
+	const { id: userId } = requestUser.parse(request.user);
 
 	try {
 		const data = await createTask(prisma, {
@@ -33,7 +35,7 @@ async function createTaskHandler(request: FastifyRequest, reply: FastifyReply) {
 			description,
 			parentId,
 			projectId,
-			userId: "asr",
+			userId,
 		});
 
 		return reply.status(201).send({
