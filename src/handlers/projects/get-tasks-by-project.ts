@@ -1,5 +1,4 @@
-import { prisma } from "../lib/prisma";
-import { ClientError } from "../errors/client-error";
+import { ClientError } from "../../errors/client-error";
 import type { PrismaClient } from "@prisma/client";
 
 interface GetAllTasksByProjectProps {

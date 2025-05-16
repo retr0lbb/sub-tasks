@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { toggleTaskCompletion } from "../handlers/complete-task-handler";
+import { toggleTaskCompletion } from "../handlers/tasks/complete-task-handler";
 import { ServerError } from "../errors/server.error";
 
 export async function toggleTaskCompletionRoute(app: FastifyInstance) {

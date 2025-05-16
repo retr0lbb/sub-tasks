@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { createTask } from "../handlers/create-task-handler";
+import { createTask } from "../handlers/tasks/create-task-handler";
 import { ServerError } from "../errors/server.error";
 import { prisma } from "../lib/prisma";
 

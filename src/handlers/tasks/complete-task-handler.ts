@@ -1,5 +1,5 @@
-import { ClientError } from "../errors/client-error";
-import { prisma } from "../lib/prisma";
+import { ClientError } from "../../errors/client-error";
+import { prisma } from "../../lib/prisma";
 
 interface CompleteTaskParams {
 	taskId: string;

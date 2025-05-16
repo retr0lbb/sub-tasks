@@ -10,15 +10,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Users{
+  id String @id @default(uuid())
+  username String
+  email String @unique
+  password String 
+
+  @@map("users")
+}
+
 model Projects{
   id String @id @default(uuid())
   name String
   description String
 
   tasks Tasks[]
+
   @@map("projects")
 }
-
 
 model Tasks{
   id String @id @default(uuid())
@@ -33,7 +42,8 @@ model Tasks{
   ParentTask Tasks? @relation("SubTasks", fields: [parentId], references: [id])
   SubTasks Tasks[] @relation("SubTasks")
 
-  @@map("task")
   projects Projects? @relation(fields: [projectIdId], references: [id])
   projectIdId String?
+  
+  @@map("task")
 }

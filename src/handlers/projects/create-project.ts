@@ -1,4 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
+
 interface ProjectProps {
 	name: string;
 	description: string;

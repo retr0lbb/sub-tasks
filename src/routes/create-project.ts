@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { createProject } from "../handlers/create-project";
+import { createProject } from "../handlers/projects/create-project";
 import z from "zod";
 import { prisma } from "../lib/prisma";
 import { ServerError } from "../errors/server.error";
