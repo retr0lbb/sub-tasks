@@ -1,4 +1,13 @@
-###
+### Create a project.
+POST http://localhost:3333/project
+content-type: application/json
+
+{
+    "name":"House-keeper2",
+    "description":"um projeto de automação residencial e IoT."
+}
+
+### Create a task with or without parentId but passing project ID.
 POST http://localhost:3333/project/7a62f62a-0e20-4bcf-a7a7-6b9476a29425/tasks
 Content-Type: application/json
 
@@ -8,16 +17,11 @@ Content-Type: application/json
     "parentId": "887e8d36-393e-41c1-b241-c62d3eb66008"
 }
 
-###
-POST http://localhost:3333/project
-content-type: application/json
-
-{
-    "name":"House-keeper2",
-    "description":"um projeto de automação residencial e IoT."
-}
-
-
-###
+### Gets all tasks from a project passing the project ID.
 GET  http://localhost:3333/project/7a62f62a-0e20-4bcf-a7a7-6b9476a29425/tasks
+Content-Type: application/json
+
+
+### Get a specific task with its subtasks
+GET http://localhost:3333/tasks/5b60e461-8a57-4919-8c11-54bf275646b4
 Content-Type: application/json

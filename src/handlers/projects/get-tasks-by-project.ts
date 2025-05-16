@@ -1,5 +1,6 @@
 import { ClientError } from "../../errors/client-error";
 import type { PrismaClient } from "@prisma/client";
+import { recursiveGetSubtasks } from "../../utils/iterate-over-subtasks";
 
 interface GetAllTasksByProjectProps {
 	projectId: string;
@@ -39,37 +40,4 @@ export async function getAllTasksByProject(
 		}),
 	);
 	return allTasks;
-}
-
-interface TaskWithSubtasks {
-	id: string;
-	description: string | null;
-	title: string;
-	createdAt: Date;
-	updatedAt: Date | null;
-	isCompleted: boolean;
-	parentId: string | null;
-	subTasks: TaskWithSubtasks[];
-}
-
-async function recursiveGetSubtasks(
-	db: PrismaClient,
-	task: Omit<TaskWithSubtasks, "subTasks"> | null,
-): Promise<TaskWithSubtasks> {
-	if (!task) throw new ClientError("Task not found");
-
-	const subtasks = await db.tasks.findMany({
-		where: {
-			parentId: task.id,
-		},
-	});
-
-	const formattedSubtasks = await Promise.all(
-		subtasks.map(async (sub) => await recursiveGetSubtasks(db, sub)),
-	);
-
-	return {
-		...task,
-		subTasks: formattedSubtasks,
-	};
 }

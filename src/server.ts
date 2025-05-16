@@ -14,6 +14,7 @@ app.register(createTaskRoute);
 app.register(getAllTasksRoute);
 app.register(toggleTaskCompletionRoute);
 app.register(createProjectRoute);
+app.register(getTaskRoute);
 
 app
 	.listen({

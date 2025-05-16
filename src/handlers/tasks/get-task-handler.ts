@@ -1,12 +1,13 @@
+import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../errors/client-error";
-import { prisma } from "../../lib/prisma";
+import { recursiveGetSubtasks } from "../../utils/iterate-over-subtasks";
 
 interface getTaskParams {
 	id: string;
 }
 
-export async function getTask({ id }: getTaskParams) {
-	const task = await prisma.tasks.findUnique({
+export async function getTask({ id }: getTaskParams, db: PrismaClient) {
+	const task = await db.tasks.findUnique({
 		where: {
 			id,
 		},
@@ -16,5 +17,7 @@ export async function getTask({ id }: getTaskParams) {
 		throw new ClientError("Task not found");
 	}
 
-	return task;
+	const tasksWithSubtasks = await recursiveGetSubtasks(db, task);
+
+	return tasksWithSubtasks;
 }

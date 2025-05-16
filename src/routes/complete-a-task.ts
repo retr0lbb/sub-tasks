@@ -2,6 +2,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { toggleTaskCompletion } from "../handlers/tasks/complete-task-handler";
 import { ServerError } from "../errors/server.error";
+import { prisma } from "../lib/prisma";
 
 export async function toggleTaskCompletionRoute(app: FastifyInstance) {
 	app.put("/task/:taskId/complete", toggleTaskCompletionRouteHandler);
@@ -22,7 +23,7 @@ async function toggleTaskCompletionRouteHandler(
 	const { taskId } = requestParams.parse(request.params);
 	const { completion } = requestBody.parse(request.body);
 	try {
-		toggleTaskCompletion({ taskId, completion });
+		toggleTaskCompletion({ taskId, completion }, prisma);
 		return reply.status(200).send({
 			message: "Task created sucessfully task updated Sucessfully",
 		});

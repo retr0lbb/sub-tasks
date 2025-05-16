@@ -1,16 +1,16 @@
+import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../errors/client-error";
-import { prisma } from "../../lib/prisma";
 
 interface CompleteTaskParams {
 	taskId: string;
 	completion: boolean;
 }
 
-export async function toggleTaskCompletion({
-	taskId,
-	completion,
-}: CompleteTaskParams) {
-	const task = await prisma.tasks.findUnique({
+export async function toggleTaskCompletion(
+	{ taskId, completion }: CompleteTaskParams,
+	db: PrismaClient,
+) {
+	const task = await db.tasks.findUnique({
 		where: {
 			id: taskId,
 		},
@@ -26,27 +26,42 @@ export async function toggleTaskCompletion({
 		);
 	}
 
-	async function completeSubtask(taskId: string, completion: boolean) {
-		const subtasks = await prisma.tasks.findMany({
-			where: {
-				parentId: taskId,
-			},
-		});
+	const tasksIdAndParentId = await getAllTaskIdsRecursively(task.id, db);
+	const taskIds = tasksIdAndParentId.map((item) => {
+		return item.id;
+	});
 
-		await prisma.tasks.update({
-			where: {
-				id: taskId,
-			},
-			data: {
-				isCompleted: completion,
-				updatedAt: new Date(),
-			},
-		});
+	await db.tasks.updateMany({
+		data: {
+			isCompleted: completion,
+		},
+		where: {
+			id: { in: taskIds },
+		},
+	});
+}
 
-		for (const subtask of subtasks) {
-			await completeSubtask(subtask.id, completion);
-		}
-	}
+interface TasksIdAndParentId {
+	id: string;
+	parentId: string | null;
+}
 
-	completeSubtask(taskId, completion);
+async function getAllTaskIdsRecursively(
+	parentTaskId: string,
+	db: PrismaClient,
+): Promise<TasksIdAndParentId[]> {
+	const subtasks = await db.tasks.findMany({
+		where: { parentId: parentTaskId },
+		select: { id: true, parentId: true },
+	});
+
+	const nestedTasks = await Promise.all(
+		subtasks.map((task) => getAllTaskIdsRecursively(task.id, db)),
+	);
+
+	return [
+		{ id: parentTaskId, parentId: null },
+		...subtasks,
+		...nestedTasks.flat(),
+	];
 }
