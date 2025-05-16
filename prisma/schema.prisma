@@ -17,6 +17,7 @@ model Users{
   password String 
 
   @@map("users")
+  Tasks Tasks[]
 }
 
 model Projects{
@@ -28,6 +29,7 @@ model Projects{
 
   @@map("projects")
 }
+
 
 model Tasks{
   id String @id @default(uuid())
@@ -44,6 +46,9 @@ model Tasks{
 
   projects Projects? @relation(fields: [projectIdId], references: [id])
   projectIdId String?
+
+  userId String?
+  User Users? @relation(fields: [userId], references: [id])
   
   @@map("task")
 }

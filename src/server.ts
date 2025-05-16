@@ -7,6 +7,7 @@ import { errorHandler } from "./errors/error-handler";
 import { createProjectRoute } from "./routes/create-project";
 import { updateTaskRoute } from "./routes/updateTask";
 import { deleteTaskRoute } from "./routes/delete-task";
+import { registerUserRoute } from "./routes/register-user";
 
 const app = fastify();
 
@@ -19,6 +20,7 @@ app.register(deleteTaskRoute);
 app.register(getTaskRoute);
 app.register(updateTaskRoute);
 app.register(createProjectRoute);
+app.register(registerUserRoute);
 
 app
 	.listen({

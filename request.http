@@ -43,5 +43,16 @@ Content-Type: application/json
     "parentId": null
 }
 
-###
+### delete a task and its subtasks
 DELETE http://localhost:3333/tasks/5df25fde-ca43-49df-a3ae-d6a0043f7fba
+
+
+### registers a new user
+POST http://localhost:3333/auth/register
+Content-Type: application/json
+
+{
+    "userName": "retr0lbb",
+    "email": "retr0lbb@gmail.com",
+    "password": "123123"
+}

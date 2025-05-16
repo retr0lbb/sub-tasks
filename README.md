@@ -12,5 +12,5 @@ At present, this project is a good ol’ Node.js API, but hold onto your hats! T
 - [✅] can complete tasks
 - [✅] on task completion also completes subtasks
 
-- [ ] use an login sistem do devide tasks by users (working on it)
+- [ ] use an login system do divide tasks by users (working on it)
 
