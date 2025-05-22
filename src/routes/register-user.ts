@@ -2,7 +2,6 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import z, { string } from "zod";
 import { registerUser } from "../handlers/users/register-user";
 import { prisma } from "../lib/prisma";
-import { ServerError } from "../errors/server.error";
 
 export async function registerUserRoute(app: FastifyInstance) {
 	app.post("/auth/register", registerUserHandler);
@@ -29,6 +28,7 @@ async function registerUserHandler(
 			.status(201)
 			.send({ message: "user created with success", token: createdUser.id });
 	} catch (error) {
-		throw new ServerError("an error occured");
+		console.log(error);
+		throw error;
 	}
 }

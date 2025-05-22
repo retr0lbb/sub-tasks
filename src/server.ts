@@ -10,6 +10,7 @@ import { deleteTaskRoute } from "./routes/delete-task";
 import { registerUserRoute } from "./routes/register-user";
 import { loginUserRoute } from "./routes/login-user";
 import jwtPlugin from "./lib/jwt-plugin";
+import { deleteProjectRoute } from "./routes/delete-project";
 
 const app = fastify();
 app.setErrorHandler(errorHandler);
@@ -25,6 +26,7 @@ app.register(updateTaskRoute);
 app.register(createProjectRoute);
 app.register(registerUserRoute);
 app.register(loginUserRoute);
+app.register(deleteProjectRoute);
 
 app
 	.listen({
