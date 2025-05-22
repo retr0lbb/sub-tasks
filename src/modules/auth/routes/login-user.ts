@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { loginUser } from "../handlers/users/login-user";
-import { prisma } from "../lib/prisma";
+import { loginUser } from "../handlers/login-user";
+import { prisma } from "../../../lib/prisma";
 
 export async function loginUserRoute(app: FastifyInstance) {
 	app.post("/auth/login", loginUserHandler);

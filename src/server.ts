@@ -1,32 +1,26 @@
 import fastify from "fastify";
-import { createTaskRoute } from "./routes/create-task-route";
-import { getTaskRoute } from "./routes/get-task";
-import { getAllTasksRoute } from "./routes/get-tasks-by-project";
-import { toggleTaskCompletionRoute } from "./routes/complete-a-task";
+import { createTaskRoute } from "./modules/tasks/routes/create-task-route";
+import { getTaskRoute } from "./modules/tasks/routes/get-task";
+import { getAllTasksRoute } from "./modules/projects/routes/get-tasks-by-project";
+import { toggleTaskCompletionRoute } from "./modules/tasks/routes/complete-a-task";
 import { errorHandler } from "./errors/error-handler";
-import { createProjectRoute } from "./routes/create-project";
-import { updateTaskRoute } from "./routes/updateTask";
-import { deleteTaskRoute } from "./routes/delete-task";
-import { registerUserRoute } from "./routes/register-user";
-import { loginUserRoute } from "./routes/login-user";
+import { createProjectRoute } from "./modules/projects/routes/create-project";
+import { updateTaskRoute } from "./modules/tasks/routes/update-task";
+import { deleteTaskRoute } from "./modules/tasks/routes/delete-task";
 import jwtPlugin from "./lib/jwt-plugin";
-import { deleteProjectRoute } from "./routes/delete-project";
+import { deleteProjectRoute } from "./modules/projects/routes/delete-project";
+import { userModule } from "./modules/auth";
+import { taskModule } from "./modules/tasks";
+import { projectModule } from "./modules/projects";
 
 const app = fastify();
 app.setErrorHandler(errorHandler);
 
 app.register(jwtPlugin);
 
-app.register(createTaskRoute);
-app.register(getAllTasksRoute);
-app.register(toggleTaskCompletionRoute);
-app.register(deleteTaskRoute);
-app.register(getTaskRoute);
-app.register(updateTaskRoute);
-app.register(createProjectRoute);
-app.register(registerUserRoute);
-app.register(loginUserRoute);
-app.register(deleteProjectRoute);
+app.register(userModule);
+app.register(taskModule);
+app.register(projectModule);
 
 app
 	.listen({

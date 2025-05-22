@@ -1,9 +1,9 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { requestUser } from "../utils/request-user.type";
-import { deleteProject } from "../handlers/projects/delete-project";
-import { prisma } from "../lib/prisma";
-import { ServerError } from "../errors/server.error";
+import { requestUser } from "../../../utils/request-user.type";
+import { deleteProject } from "../handlers/delete-project";
+import { prisma } from "../../../lib/prisma";
+import { ServerError } from "../../../errors/server.error";
 
 export async function deleteProjectRoute(app: FastifyInstance) {
 	app.delete(

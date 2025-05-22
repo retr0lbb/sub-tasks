@@ -1,9 +1,9 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { createTask } from "../handlers/tasks/create-task-handler";
-import { ServerError } from "../errors/server.error";
-import { prisma } from "../lib/prisma";
-import { requestUser } from "../utils/request-user.type";
+import { createTask } from "../handlers/create-task-handler";
+import { ServerError } from "../../../errors/server.error";
+import { prisma } from "../../../lib/prisma";
+import { requestUser } from "../../../utils/request-user.type";
 
 const createTaskBodySchema = z.object({
 	title: z.string().min(3, "cannot receive an title lesser than 3"),

@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { getAllTasksByProject } from "../handlers/projects/get-tasks-by-project";
-import { prisma } from "../lib/prisma";
+import { getAllTasksByProject } from "../handlers/get-tasks-by-project";
+import { prisma } from "../../../lib/prisma";
 
 export async function getAllTasksRoute(app: FastifyInstance) {
 	app.get("/project/:projectId/tasks", getAllTasksHandler);

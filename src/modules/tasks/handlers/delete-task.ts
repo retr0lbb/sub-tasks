@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
-import { ClientError } from "../../errors/client-error";
-import { getAllTaskIdsRecursively } from "../../utils/get-all-subtasks-id";
+import { ClientError } from "../../../errors/client-error";
+import { getAllTaskIdsRecursively } from "../../../utils/get-all-subtasks-id";
 
 export async function deleteTask(taskId: string, db: PrismaClient) {
 	const task = await db.tasks.findUnique({

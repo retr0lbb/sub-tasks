@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
-import { ClientError } from "../../errors/client-error";
+import { ClientError } from "../../../errors/client-error";
 import { compare } from "bcrypt";
 
 interface UserData {

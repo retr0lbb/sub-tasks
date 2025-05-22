@@ -1,8 +1,8 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { toggleTaskCompletion } from "../handlers/tasks/complete-task-handler";
-import { ServerError } from "../errors/server.error";
-import { prisma } from "../lib/prisma";
+import { toggleTaskCompletion } from "../handlers/complete-task-handler";
+import { ServerError } from "../../../errors/server.error";
+import { prisma } from "../../../lib/prisma";
 
 export async function toggleTaskCompletionRoute(app: FastifyInstance) {
 	app.put("/tasks/:taskId/complete", toggleTaskCompletionRouteHandler);

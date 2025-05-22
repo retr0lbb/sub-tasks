@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { getTask } from "../handlers/tasks/get-task-handler";
-import { prisma } from "../lib/prisma";
+import { getTask } from "../handlers/get-task-handler";
+import { prisma } from "../../../lib/prisma";
 
 const getTaskParams = z.object({
 	taskId: z.string(),

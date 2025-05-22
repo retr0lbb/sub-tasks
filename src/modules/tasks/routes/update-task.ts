@@ -1,8 +1,8 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { ServerError } from "../errors/server.error";
-import { prisma } from "../lib/prisma";
-import { updateTask } from "../handlers/tasks/update-task";
+import { ServerError } from "../../../errors/server.error";
+import { prisma } from "../../../lib/prisma";
+import { updateTask } from "../handlers/update-task";
 
 export async function updateTaskRoute(app: FastifyInstance) {
 	app.patch("/tasks/:taskId", updateTaskHandler);

@@ -1,8 +1,8 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { deleteTask } from "../handlers/tasks/delete-task";
-import { prisma } from "../lib/prisma";
-import { ServerError } from "../errors/server.error";
+import { deleteTask } from "../handlers/delete-task";
+import { prisma } from "../../../lib/prisma";
+import { ServerError } from "../../../errors/server.error";
 
 export async function deleteTaskRoute(app: FastifyInstance) {
 	app.delete("/tasks/:taskId", deleteTaskHandler);

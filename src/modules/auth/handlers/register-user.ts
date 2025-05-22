@@ -1,7 +1,7 @@
 import type { PrismaClient } from "@prisma/client";
-import { ClientError } from "../../errors/client-error";
+import { ClientError } from "../../../errors/client-error";
 import { genSalt, hash } from "bcrypt";
-import { env } from "../../utils/env";
+import { env } from "../../../utils/env";
 
 interface UserDataProps {
 	userName: string;

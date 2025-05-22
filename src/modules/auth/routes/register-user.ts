@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import z, { string } from "zod";
-import { registerUser } from "../handlers/users/register-user";
-import { prisma } from "../lib/prisma";
+import z from "zod";
+import { registerUser } from "../handlers/register-user";
+import { prisma } from "../../../lib/prisma";
 
 export async function registerUserRoute(app: FastifyInstance) {
 	app.post("/auth/register", registerUserHandler);

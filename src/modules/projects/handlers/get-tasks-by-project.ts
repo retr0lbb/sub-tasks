@@ -1,6 +1,6 @@
-import { ClientError } from "../../errors/client-error";
+import { ClientError } from "../../../errors/client-error";
 import type { PrismaClient } from "@prisma/client";
-import { recursiveGetSubtasks } from "../../utils/iterate-over-subtasks";
+import { recursiveGetSubtasks } from "../../../utils/iterate-over-subtasks";
 
 interface GetAllTasksByProjectProps {
 	projectId: string;

@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
-import { ClientError } from "../../errors/client-error";
-import { requestUser } from "../../utils/request-user.type";
+import { ClientError } from "../../../errors/client-error";
+import { requestUser } from "../../../utils/request-user.type";
 
 interface CreateTaskParams {
 	userId: string;
