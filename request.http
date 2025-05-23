@@ -39,39 +39,3 @@ Content-Type: application/json
 ### delete a task and its subtasks
 DELETE http://localhost:3333/tasks/63b9b19c-541d-41ea-a9ee-47dd40f586c1
 
-
-### registers a new user
-POST http://localhost:3333/auth/register
-Content-Type: application/json
-
-{
-    "userName": "retr0lbb",
-    "email": "retr0lbb@gmail.com",
-    "password": "123123"
-}
-
-
-### loggs existing user
-POST http://localhost:3333/auth/login
-Content-Type: application/json
-
-{
-    "email": "retr0lbb@gmail.com",
-    "password": "123123"
-}
-
-### delete a project
-DELETE http://localhost:3333/project/d22ce18d-4719-4dbb-83d7-482a0390cc11
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjllMWMxMWYwLTIxMDctNGU4MS04OWU0LWFmMTc2NDBjYTU5MiIsImlhdCI6MTc0Nzg3MTIwOCwiZXhwIjoxNzQ4MDQ0MDA4fQ.fPMP7BHcsNs8J2TNqa73sQjKy1LXR41p2mixsuf5Zeo
-### Create a project.
-POST http://localhost:3333/project
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjllMWMxMWYwLTIxMDctNGU4MS04OWU0LWFmMTc2NDBjYTU5MiIsImlhdCI6MTc0Nzg3MTIwOCwiZXhwIjoxNzQ4MDQ0MDA4fQ.fPMP7BHcsNs8J2TNqa73sQjKy1LXR41p2mixsuf5Zeo
-
-{
-    "name":"Faculdade no exterior",
-    "description":"Me formar em fisica quantica em uma faculdade no exterior"
-}
-
-
-
