@@ -22,7 +22,7 @@ model Users {
 model Sessions {
   id           String   @id @default(uuid())
   userId       String
-  refreshToken String   @map("refresh_token")
+  refreshToken String   @map("refresh_token") @unique
   createdAt    DateTime @default(now()) @map("created_at")
   expiresAt    DateTime @map("expires_at")
   isValid      Boolean  @default(true)

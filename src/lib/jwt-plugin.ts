@@ -17,7 +17,9 @@ export default fp(async (app) => {
 			try {
 				await request.jwtVerify();
 			} catch (err) {
-				reply.status(401).send({ message: "Unauthorized" });
+				reply
+					.status(401)
+					.send({ error: "Unauthorized", message: "Invalid or expired Token" });
 				console.log(err);
 			}
 		},

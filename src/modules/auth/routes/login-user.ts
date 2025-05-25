@@ -19,9 +19,15 @@ async function loginUserHandler(
 
 	const { email, password } = bodySchema.parse(request.body);
 
-	const loggedUser = await loginUser({ email, password }, prisma);
-
-	const token = this.jwt.sign({ id: loggedUser.id });
-
-	return reply.status(200).send({ message: "user logged with success", token });
+	try {
+		const tokens = await loginUser({ email, password }, prisma, this);
+		return reply.status(200).send({
+			message: "user logged with success",
+			accessToken: tokens.accessToken,
+			refreshToken: tokens.refreshToken,
+		});
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
 }
