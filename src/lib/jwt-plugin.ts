@@ -7,7 +7,7 @@ export default fp(async (app) => {
 	app.register(jwt, {
 		secret: env.JWT_TOKEN_SECRET,
 		sign: {
-			expiresIn: "2d",
+			expiresIn: "1d",
 		},
 	});
 

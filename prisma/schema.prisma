@@ -1,58 +1,61 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Users{
-  id String @id @default(uuid())
+model Users {
+  id       String     @id @default(uuid())
   username String
-  email String @unique
-  password String 
+  email    String     @unique
+  password String
+  Sessions Sessions[]
+  Projects Projects[]
+  Tasks    Tasks[]
 
   @@map("users")
-  Tasks Tasks[]
-  Projects Projects[]
 }
 
-model Projects{
-  id String @id @default(uuid())
-  name String
-  description String
+model Sessions {
+  id           String   @id @default(uuid())
+  userId       String
+  refreshToken String   @map("refresh_token")
+  createdAt    DateTime @default(now()) @map("created_at")
+  expiresAt    DateTime @map("expires_at")
+  isValid      Boolean  @default(true)
+  user         Users    @relation(fields: [userId], references: [id])
 
-  tasks Tasks[]
-  
-  userId String?
-  Users Users? @relation(fields: [userId], references: [id])
+  @@index([refreshToken])
+}
+
+model Projects {
+  id          String  @id @default(uuid())
+  name        String
+  description String
+  userId      String?
+  Users       Users?  @relation(fields: [userId], references: [id])
+  tasks       Tasks[]
 
   @@map("projects")
 }
 
-
-model Tasks{
-  id String @id @default(uuid())
-  title String
+model Tasks {
+  id          String    @id @default(uuid())
+  title       String
   description String?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime? @map("updated_at")
-  isCompleted Boolean @default(false) @map("is_complete")
-  
-  parentId String? @map("parent_id")
-
-  ParentTask Tasks? @relation("SubTasks", fields: [parentId], references: [id], onDelete: Cascade)
-  SubTasks Tasks[] @relation("SubTasks")
-
-  projects Projects? @relation(fields: [projectIdId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @map("updated_at")
+  isCompleted Boolean   @default(false) @map("is_complete")
+  parentId    String?   @map("parent_id")
   projectIdId String?
+  userId      String?
+  ParentTask  Tasks?    @relation("SubTasks", fields: [parentId], references: [id], onDelete: Cascade)
+  SubTasks    Tasks[]   @relation("SubTasks")
+  projects    Projects? @relation(fields: [projectIdId], references: [id], onDelete: Cascade)
+  User        Users?    @relation(fields: [userId], references: [id])
 
-  userId String?
-  User Users? @relation(fields: [userId], references: [id])
-  
   @@map("task")
 }

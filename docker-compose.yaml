@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: bitnami_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRESQL_USERNAME=ret
+      - POSTGRESQL_PASSWORD=123123
+      - POSTGRESQL_DATABASE=macrotask
+    volumes:
+      - postgres_data:/bitnami/postgresql
+
+volumes:
+  postgres_data:
