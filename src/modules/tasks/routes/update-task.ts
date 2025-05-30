@@ -5,7 +5,11 @@ import { prisma } from "../../../lib/prisma";
 import { updateTask } from "../handlers/update-task";
 
 export async function updateTaskRoute(app: FastifyInstance) {
-	app.patch("/tasks/:taskId", updateTaskHandler);
+	app.patch(
+		"/tasks/:taskId",
+		{ onRequest: [app.authenticate] },
+		updateTaskHandler,
+	);
 }
 
 const requestParams = z.object({

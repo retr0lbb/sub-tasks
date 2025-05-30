@@ -15,7 +15,9 @@ import { projectModule } from "./modules/projects";
 import cookie from "@fastify/cookie";
 import { env } from "./utils/env";
 
-const app = fastify();
+const app = fastify({
+	requestTimeout: 100000,
+});
 app.setErrorHandler(errorHandler);
 
 app.register(jwtPlugin);

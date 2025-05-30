@@ -8,7 +8,7 @@ const getTaskParams = z.object({
 });
 
 export async function getTaskRoute(app: FastifyInstance) {
-	app.get("/tasks/:taskId", getTaskHandler);
+	app.get("/tasks/:taskId", { onRequest: [app.authenticate] }, getTaskHandler);
 }
 
 async function getTaskHandler(request: FastifyRequest, reply: FastifyReply) {

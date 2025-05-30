@@ -5,7 +5,11 @@ import { ServerError } from "../../../errors/server.error";
 import { prisma } from "../../../lib/prisma";
 
 export async function toggleTaskCompletionRoute(app: FastifyInstance) {
-	app.put("/tasks/:taskId/complete", toggleTaskCompletionRouteHandler);
+	app.put(
+		"/tasks/:taskId/complete",
+		{ onRequest: [app.authenticate] },
+		toggleTaskCompletionRouteHandler,
+	);
 }
 
 const requestParams = z.object({

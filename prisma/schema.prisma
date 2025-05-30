@@ -12,9 +12,9 @@ model Users {
   username String
   email    String     @unique
   password String
+  
   Sessions Sessions[]
   Projects Projects[]
-  Tasks    Tasks[]
 
   @@map("users")
 }
@@ -26,6 +26,7 @@ model Sessions {
   createdAt    DateTime @default(now()) @map("created_at")
   expiresAt    DateTime @map("expires_at")
   isValid      Boolean  @default(true)
+
   user         Users    @relation(fields: [userId], references: [id])
 
   @@index([refreshToken])
@@ -35,6 +36,7 @@ model Projects {
   id          String  @id @default(uuid())
   name        String
   description String
+
   userId      String?
   Users       Users?  @relation(fields: [userId], references: [id])
   tasks       Tasks[]
@@ -49,13 +51,13 @@ model Tasks {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @map("updated_at")
   isCompleted Boolean   @default(false) @map("is_complete")
+  
   parentId    String?   @map("parent_id")
-  projectIdId String?
-  userId      String?
+  projectId String?
+
   ParentTask  Tasks?    @relation("SubTasks", fields: [parentId], references: [id], onDelete: Cascade)
   SubTasks    Tasks[]   @relation("SubTasks")
-  projects    Projects? @relation(fields: [projectIdId], references: [id], onDelete: Cascade)
-  User        Users?    @relation(fields: [userId], references: [id])
+  projects    Projects? @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@map("task")
 }

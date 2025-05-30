@@ -1,11 +1,22 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
 import { getAllTaskIdsRecursively } from "../../../utils/get-all-subtasks-id";
+import { validateUserProject } from "../../../utils/validate-user-project";
 
-export async function deleteTask(taskId: string, db: PrismaClient) {
+interface deleteTaskDTO {
+	taskId: string;
+	projectId: string;
+	userId: string;
+}
+
+export async function deleteTask(data: deleteTaskDTO, db: PrismaClient) {
+	if ((await validateUserProject(data.userId, data.projectId, db)) === false) {
+		throw new ClientError("Cannot verify If user Project is valid");
+	}
+
 	const task = await db.tasks.findUnique({
 		where: {
-			id: taskId,
+			id: data.taskId,
 		},
 	});
 
@@ -25,4 +36,6 @@ export async function deleteTask(taskId: string, db: PrismaClient) {
 			},
 		},
 	});
+
+	return;
 }
