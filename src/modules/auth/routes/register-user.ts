@@ -26,7 +26,7 @@ async function registerUserHandler(
 		);
 		return reply
 			.status(201)
-			.send({ message: "user created with success", token: createdUser.id });
+			.send({ message: "user created with success", id: createdUser.id });
 	} catch (error) {
 		console.log(error);
 		throw error;

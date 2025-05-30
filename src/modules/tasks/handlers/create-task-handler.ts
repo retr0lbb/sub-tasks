@@ -1,6 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
-import { requestUser } from "../../../utils/request-user.type";
 
 interface CreateTaskParams {
 	userId: string;
@@ -14,6 +13,22 @@ export async function createTask(db: PrismaClient, data: CreateTaskParams) {
 	if (!data.userId) {
 		throw new ClientError("You must be register to it");
 	}
+	const project = await db.projects.findUnique({
+		where: {
+			id: data.projectId,
+		},
+	});
+
+	if (!project) {
+		throw new ClientError("Project not found");
+	}
+
+	if (project.userId !== data.userId) {
+		throw new ClientError(
+			"cannot create a task to a project that is not yours",
+		);
+	}
+
 	const user = await db.users.findUnique({
 		where: {
 			id: data.userId,
@@ -23,6 +38,7 @@ export async function createTask(db: PrismaClient, data: CreateTaskParams) {
 	if (!user) {
 		throw new Error("User not found in our database");
 	}
+
 	try {
 		if (data.parentId) {
 			const parentTask = await db.tasks.findUnique({
@@ -34,16 +50,6 @@ export async function createTask(db: PrismaClient, data: CreateTaskParams) {
 			if (parentTask === null) {
 				throw new ClientError("Parent task not found");
 			}
-		}
-
-		const project = await db.projects.findUnique({
-			where: {
-				id: data.projectId,
-			},
-		});
-
-		if (project === null) {
-			throw new ClientError("couldn't find project");
 		}
 
 		const result = await db.tasks.create({

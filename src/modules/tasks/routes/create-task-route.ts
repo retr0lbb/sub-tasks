@@ -44,6 +44,6 @@ async function createTaskHandler(request: FastifyRequest, reply: FastifyReply) {
 		});
 	} catch (error) {
 		console.log(error);
-		throw new ServerError("An error occurred creating task");
+		throw error;
 	}
 }
