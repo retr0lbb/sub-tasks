@@ -2,19 +2,26 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { getTask } from "../handlers/get-task-handler";
 import { prisma } from "../../../lib/prisma";
-
-const getTaskParams = z.object({
-	taskId: z.string(),
-});
+import { requestUser } from "../../../utils/request-user.type";
 
 export async function getTaskRoute(app: FastifyInstance) {
-	app.get("/tasks/:taskId", { onRequest: [app.authenticate] }, getTaskHandler);
+	app.get(
+		"/project/:projectId/tasks/:taskId",
+		{ onRequest: [app.authenticate] },
+		getTaskHandler,
+	);
 }
 
 async function getTaskHandler(request: FastifyRequest, reply: FastifyReply) {
-	const { taskId } = getTaskParams.parse(request.params);
+	const getTaskParams = z.object({
+		projectId: z.string().uuid(),
+		taskId: z.string().uuid(),
+	});
 
-	const task = await getTask({ id: taskId }, prisma);
+	const { id: userId } = requestUser.parse(request.user);
+	const { projectId, taskId } = getTaskParams.parse(request.params);
+
+	const task = await getTask({ taskId, projectId, userId }, prisma);
 
 	reply.status(200).send({
 		data: task,

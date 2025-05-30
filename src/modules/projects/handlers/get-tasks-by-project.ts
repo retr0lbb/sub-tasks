@@ -22,11 +22,11 @@ export async function getAllTasksByProject(
 
 	const topLevelTasks = await db.tasks.findMany({
 		where: {
-			projectIdId: data.projectId,
+			projectId: data.projectId,
 			parentId: null,
 		},
 		omit: {
-			projectIdId: true,
+			projectId: true,
 		},
 	});
 

@@ -3,32 +3,36 @@ import { z } from "zod";
 import { ServerError } from "../../../errors/server.error";
 import { prisma } from "../../../lib/prisma";
 import { updateTask } from "../handlers/update-task";
+import { requestUser } from "../../../utils/request-user.type";
 
 export async function updateTaskRoute(app: FastifyInstance) {
 	app.patch(
-		"/tasks/:taskId",
+		"/project/:projectId/tasks/:taskId",
 		{ onRequest: [app.authenticate] },
 		updateTaskHandler,
 	);
 }
 
-const requestParams = z.object({
-	taskId: z.string().uuid(),
-});
-
-const requestBody = z.object({
-	title: z.string().optional(),
-	description: z.string().optional().nullable(),
-	parentId: z.string().uuid().optional().nullable(),
-	isCompleted: z.coerce.boolean(),
-});
-
 async function updateTaskHandler(request: FastifyRequest, reply: FastifyReply) {
-	const { taskId } = requestParams.parse(request.params);
+	const requestBody = z.object({
+		title: z.string().optional(),
+		description: z.string().optional().nullable(),
+		parentId: z.string().uuid().optional().nullable(),
+		isCompleted: z.coerce.boolean(),
+	});
+
+	const requestParams = z.object({
+		projectId: z.string().uuid(),
+		taskId: z.string().uuid(),
+	});
+
+	const { taskId, projectId } = requestParams.parse(request.params);
 	const data = requestBody.parse(request.body);
+	const { id: userId } = requestUser.parse(request.user);
+
 	try {
 		updateTask(
-			taskId,
+			{ taskId, projectId, userId },
 			{
 				description: data.description,
 				isCompleted: data.isCompleted,
