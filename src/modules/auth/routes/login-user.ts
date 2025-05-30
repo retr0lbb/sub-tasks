@@ -21,10 +21,17 @@ async function loginUserHandler(
 
 	try {
 		const tokens = await loginUser({ email, password }, prisma, this);
+		reply.setCookie("refreshToken", tokens.refreshToken, {
+			path: "/",
+			httpOnly: true,
+			sameSite: "strict",
+			secure: false,
+			maxAge: 60 * 60 * 24 * 365,
+		});
+
 		return reply.status(200).send({
 			message: "user logged with success",
 			accessToken: tokens.accessToken,
-			refreshToken: tokens.refreshToken,
 		});
 	} catch (error) {
 		console.log(error);

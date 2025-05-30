@@ -12,11 +12,17 @@ import { deleteProjectRoute } from "./modules/projects/routes/delete-project";
 import { userModule } from "./modules/auth";
 import { taskModule } from "./modules/tasks";
 import { projectModule } from "./modules/projects";
+import cookie from "@fastify/cookie";
+import { env } from "./utils/env";
 
 const app = fastify();
 app.setErrorHandler(errorHandler);
 
 app.register(jwtPlugin);
+app.register(cookie, {
+	secret: env.COOKIE_SECRET,
+	prefix: env.COOKIE_PREFIX,
+});
 
 app.register(userModule);
 app.register(taskModule);
