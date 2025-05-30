@@ -6,7 +6,7 @@ import { updateTask } from "../handlers/update-task";
 import { requestUser } from "../../../utils/request-user.type";
 
 export async function updateTaskRoute(app: FastifyInstance) {
-	app.patch(
+	app.put(
 		"/project/:projectId/tasks/:taskId",
 		{ onRequest: [app.authenticate] },
 		updateTaskHandler,
@@ -31,7 +31,7 @@ async function updateTaskHandler(request: FastifyRequest, reply: FastifyReply) {
 	const { id: userId } = requestUser.parse(request.user);
 
 	try {
-		updateTask(
+		await updateTask(
 			{ taskId, projectId, userId },
 			{
 				description: data.description,
@@ -45,6 +45,7 @@ async function updateTaskHandler(request: FastifyRequest, reply: FastifyReply) {
 			message: "task updated successfully!",
 		});
 	} catch (error) {
-		throw new ServerError("An error occurred processing complete task!");
+		console.log(error);
+		throw error;
 	}
 }

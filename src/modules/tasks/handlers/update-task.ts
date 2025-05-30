@@ -30,6 +30,7 @@ export async function updateTask(
 	}
 
 	if (project.userId !== userId) {
+		console.log("something went wrong");
 		throw new ClientError("Forbidden");
 	}
 
@@ -52,4 +53,6 @@ export async function updateTask(
 			...body,
 		},
 	});
+
+	return;
 }
