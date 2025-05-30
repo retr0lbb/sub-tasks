@@ -1,0 +1,26 @@
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { requestUser } from "../../../utils/request-user.type";
+import { LogOutUser } from "../handlers/logout-user";
+import { prisma } from "../../../lib/prisma";
+
+export async function LogOutUserRoute(app: FastifyInstance) {
+	app.post(
+		"/auth/logout",
+		{ onRequest: [app.authenticate] },
+		LogOutUserHandler,
+	);
+}
+
+async function LogOutUserHandler(request: FastifyRequest, reply: FastifyReply) {
+	const { id: userId } = requestUser.parse(request.user);
+
+	try {
+		await LogOutUser(userId, prisma);
+		reply
+			.status(200)
+			.send({ message: "Logged out of all accounts All accounts" });
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
