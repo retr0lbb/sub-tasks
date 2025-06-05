@@ -1,14 +1,13 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
 import { recursiveGetSubtasks } from "../../../utils/iterate-over-subtasks";
+import type { GetTasksParams } from "../dtos/get-task.dto";
+import type { RequestUser } from "../../../utils/request-user.type";
 
-interface getTaskParams {
-	taskId: string;
-	projectId: string;
-	userId: string;
-}
-
-export async function getTask(data: getTaskParams, db: PrismaClient) {
+export async function getTask(
+	data: GetTasksParams & RequestUser,
+	db: PrismaClient,
+) {
 	const project = await db.projects.findUnique({
 		where: {
 			id: data.projectId,
