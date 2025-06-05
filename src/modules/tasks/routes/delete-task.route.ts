@@ -3,6 +3,8 @@ import z from "zod";
 import { deleteTask } from "../handlers/delete-task";
 import { prisma } from "../../../lib/prisma";
 import { requestUser } from "../../../utils/request-user.type";
+import { deleteTaskParamsSchema } from "../dtos/delete-task.dto";
+import { InputError } from "../../../errors/input-error";
 
 export async function deleteTaskRoute(app: FastifyInstance) {
 	app.delete(
@@ -13,20 +15,21 @@ export async function deleteTaskRoute(app: FastifyInstance) {
 }
 
 async function deleteTaskHandler(request: FastifyRequest, reply: FastifyReply) {
-	const { id: userId } = requestUser.parse(request.user);
-	const requestParamsSchema = z.object({
-		taskId: z.string().uuid("taskId must be provided"),
-		projectId: z.string().uuid("Project Id must be provided"),
-	});
-
-	const { taskId, projectId } = requestParamsSchema.parse(request.params);
+	const user = requestUser.safeParse(request.user);
+	const params = deleteTaskParamsSchema.safeParse(request.params);
 
 	try {
+		if (!params.success) {
+			throw new InputError(params.error.errors);
+		}
+		if (!user.success) {
+			throw new InputError(user.error.errors);
+		}
+
 		await deleteTask(
 			{
-				taskId,
-				projectId,
-				userId,
+				...params.data,
+				userId: user.data.id,
 			},
 			prisma,
 		);

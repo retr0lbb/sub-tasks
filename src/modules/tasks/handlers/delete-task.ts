@@ -1,14 +1,13 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
 import { getAllTaskIdsRecursively } from "../../../utils/get-all-subtasks-id";
+import type { DeleteTaskParams } from "../dtos/delete-task.dto";
+import type { RequestUser } from "../../../utils/request-user.type";
 
-interface deleteTaskDTO {
-	taskId: string;
-	projectId: string;
-	userId: string;
-}
-
-export async function deleteTask(data: deleteTaskDTO, db: PrismaClient) {
+export async function deleteTask(
+	data: DeleteTaskParams & RequestUser,
+	db: PrismaClient,
+) {
 	const user = await db.users.findUnique({
 		where: {
 			id: data.userId,

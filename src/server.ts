@@ -6,7 +6,7 @@ import { toggleTaskCompletionRoute } from "./modules/tasks/routes/toggle-task-co
 import { errorHandler } from "./errors/error-handler";
 import { createProjectRoute } from "./modules/projects/routes/create-project";
 import { updateTaskRoute } from "./modules/tasks/routes/update-task";
-import { deleteTaskRoute } from "./modules/tasks/routes/delete-task";
+import { deleteTaskRoute } from "./modules/tasks/routes/delete-task.route";
 import jwtPlugin from "./lib/jwt-plugin";
 import { deleteProjectRoute } from "./modules/projects/routes/delete-project";
 import { userModule } from "./modules/auth";
