@@ -1,7 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
 import { getAllTaskIdsRecursively } from "../../../utils/get-all-subtasks-id";
-import { validateUserProject } from "../../../utils/validate-user-project";
 
 interface deleteTaskDTO {
 	taskId: string;
@@ -10,8 +9,25 @@ interface deleteTaskDTO {
 }
 
 export async function deleteTask(data: deleteTaskDTO, db: PrismaClient) {
-	if ((await validateUserProject(data.userId, data.projectId, db)) === false) {
-		throw new ClientError("Cannot verify If user Project is valid");
+	const user = await db.users.findUnique({
+		where: {
+			id: data.userId,
+		},
+	});
+
+	if (!user) {
+		throw new ClientError("User don't exists");
+	}
+
+	const project = await db.projects.findUnique({
+		where: {
+			id: data.projectId,
+			userId: data.userId,
+		},
+	});
+
+	if (!project || project.userId !== user.id) {
+		throw new ClientError("Project does not exists");
 	}
 
 	const task = await db.tasks.findUnique({

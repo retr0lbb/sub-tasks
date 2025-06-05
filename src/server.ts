@@ -2,7 +2,7 @@ import fastify from "fastify";
 import { createTaskRoute } from "./modules/tasks/routes/create-task-route";
 import { getTaskRoute } from "./modules/tasks/routes/get-task";
 import { getAllTasksRoute } from "./modules/projects/routes/get-tasks-by-project";
-import { toggleTaskCompletionRoute } from "./modules/tasks/routes/complete-a-task";
+import { toggleTaskCompletionRoute } from "./modules/tasks/routes/toggle-task-completion.route";
 import { errorHandler } from "./errors/error-handler";
 import { createProjectRoute } from "./modules/projects/routes/create-project";
 import { updateTaskRoute } from "./modules/tasks/routes/update-task";

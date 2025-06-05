@@ -1,18 +1,44 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
-
-interface CompleteTaskParams {
-	taskId: string;
-	isCompleted: boolean;
-}
+import type {
+	ToggleTaskCompletionBody,
+	ToggleTaskCompletionParams,
+} from "../dtos/toggle-task-completion.dto";
+import type { RequestUser } from "../../../utils/request-user.type";
 
 export async function toggleTaskCompletion(
-	{ taskId, isCompleted }: CompleteTaskParams,
+	data: ToggleTaskCompletionBody & ToggleTaskCompletionParams & RequestUser,
 	db: PrismaClient,
 ) {
+	const user = await db.users.findUnique({
+		where: {
+			id: data.userId,
+		},
+	});
+
+	if (!user) {
+		throw new ClientError("User don't exists");
+	}
+
+	const project = await db.projects.findUnique({
+		where: {
+			id: data.projectId,
+			AND: {
+				userId: data.userId,
+			},
+		},
+	});
+
+	if (!project) {
+		throw new ClientError("Project does not exists");
+	}
+
 	const task = await db.tasks.findUnique({
 		where: {
-			id: taskId,
+			id: data.taskId,
+			AND: {
+				projectId: data.projectId,
+			},
 		},
 	});
 
@@ -27,7 +53,7 @@ export async function toggleTaskCompletion(
 
 	await db.tasks.updateMany({
 		data: {
-			isCompleted,
+			isCompleted: data.isCompleted,
 			updatedAt: new Date(),
 		},
 		where: {
