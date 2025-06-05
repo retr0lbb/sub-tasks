@@ -1,5 +1,5 @@
 {
 	"editor.defaultFormatter": "biomejs.biome",
 	"editor.formatOnSave": true,
-	"cSpell.words": ["uuid"]
+	"cSpell.words": ["dtos", "uuid"]
 }

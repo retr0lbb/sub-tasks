@@ -1,15 +1,11 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
+import type { CreateTaskBody, CreateTaskParams } from "../dtos/create-task.dto";
 
-interface CreateTaskParams {
-	userId: string;
-	title: string;
-	description?: string;
-	parentId?: string | null;
-	projectId: string;
-}
-
-export async function createTask(db: PrismaClient, data: CreateTaskParams) {
+export async function createTask(
+	data: CreateTaskBody & CreateTaskParams & { userId: string },
+	db: PrismaClient,
+) {
 	if (!data.userId) {
 		throw new ClientError("You must be register to it");
 	}

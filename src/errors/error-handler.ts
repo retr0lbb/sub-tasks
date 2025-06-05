@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { ZodError } from "zod";
 import { ClientError } from "./client-error";
 import { ServerError } from "./server.error";
+import { InputError } from "./input-error";
 
 type FastifyErrorHandler = FastifyInstance["errorHandler"];
 
@@ -22,5 +23,13 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
 		return reply.status(500).send({ message: error.message });
 	}
 
-	console.log(error);
+	if (error instanceof InputError) {
+		return reply
+			.status(400)
+			.send({ message: "validation Errors", errors: error.errors.flat() });
+	}
+
+	return reply
+		.status(error.statusCode ?? 500)
+		.send({ message: "An error occurred", error: error.message });
 };
