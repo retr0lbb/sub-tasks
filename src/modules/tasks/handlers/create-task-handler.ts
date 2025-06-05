@@ -40,14 +40,14 @@ export async function createTask(db: PrismaClient, data: CreateTaskParams) {
 	}
 
 	try {
-		if (data.parentId) {
+		if (data.parentId !== null && data.parentId !== undefined) {
 			const parentTask = await db.tasks.findUnique({
 				where: {
 					id: data.parentId,
 				},
 			});
 
-			if (parentTask === null) {
+			if (parentTask === null && !parentTask) {
 				throw new ClientError("Parent task not found");
 			}
 		}

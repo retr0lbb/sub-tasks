@@ -4,6 +4,7 @@ import { recursiveGetSubtasks } from "../../../utils/iterate-over-subtasks";
 
 interface GetAllTasksByProjectProps {
 	projectId: string;
+	userId: string;
 }
 
 export async function getAllTasksByProject(
@@ -18,6 +19,20 @@ export async function getAllTasksByProject(
 
 	if (!project) {
 		throw new ClientError("Project not found");
+	}
+
+	if (project.userId !== data.userId) {
+		throw new ClientError("Forbidden");
+	}
+
+	const user = await db.users.findUnique({
+		where: {
+			id: data.userId,
+		},
+	});
+
+	if (!user) {
+		throw new ClientError("User not found in our database");
 	}
 
 	const topLevelTasks = await db.tasks.findMany({

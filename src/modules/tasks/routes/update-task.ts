@@ -1,6 +1,5 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { ServerError } from "../../../errors/server.error";
 import { prisma } from "../../../lib/prisma";
 import { updateTask } from "../handlers/update-task";
 import { requestUser } from "../../../utils/request-user.type";
