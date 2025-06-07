@@ -1,5 +1,5 @@
 import fastify from "fastify";
-import { createTaskRoute } from "./modules/tasks/routes/create-task-route";
+import { createTaskRoute } from "./modules/tasks/routes/create-task-route.route";
 import { getTaskRoute } from "./modules/tasks/routes/get-task.route";
 import { getAllTasksRoute } from "./modules/projects/routes/get-tasks-by-project";
 import { toggleTaskCompletionRoute } from "./modules/tasks/routes/toggle-task-completion.route";

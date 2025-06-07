@@ -3,6 +3,11 @@ import { z } from "zod";
 import { prisma } from "../../../lib/prisma";
 import { updateTask } from "../handlers/update-task";
 import { requestUser } from "../../../utils/request-user.type";
+import {
+	updateTaskBodySchema,
+	updateTaskParamsSchema,
+} from "../dtos/update-task.dto";
+import { InputError } from "../../../errors/input-error";
 
 export async function updateTaskRoute(app: FastifyInstance) {
 	app.put(
@@ -13,31 +18,23 @@ export async function updateTaskRoute(app: FastifyInstance) {
 }
 
 async function updateTaskHandler(request: FastifyRequest, reply: FastifyReply) {
-	const requestBody = z.object({
-		title: z.string().optional(),
-		description: z.string().optional().nullable(),
-		parentId: z.string().uuid().optional().nullable(),
-		isCompleted: z.coerce.boolean(),
-	});
-
-	const requestParams = z.object({
-		projectId: z.string().uuid(),
-		taskId: z.string().uuid(),
-	});
-
-	const { taskId, projectId } = requestParams.parse(request.params);
-	const data = requestBody.parse(request.body);
-	const { id: userId } = requestUser.parse(request.user);
+	const body = updateTaskBodySchema.safeParse(request.body);
+	const params = updateTaskParamsSchema.safeParse(request.params);
+	const user = requestUser.safeParse(request.user);
 
 	try {
+		if (!body.success) {
+			throw new InputError(body.error.errors);
+		}
+		if (!params.success) {
+			throw new InputError(params.error.errors);
+		}
+		if (!user.success) {
+			throw new InputError(user.error.errors);
+		}
+
 		await updateTask(
-			{ taskId, projectId, userId },
-			{
-				description: data.description,
-				isCompleted: data.isCompleted,
-				parentId: data.parentId,
-				title: data.title,
-			},
+			{ ...body.data, ...params.data, userId: user.data.id },
 			prisma,
 		);
 		return reply.status(200).send({
