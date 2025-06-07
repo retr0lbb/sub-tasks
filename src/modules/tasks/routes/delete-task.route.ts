@@ -17,7 +17,7 @@ export async function deleteTaskRoute(app: FastifyInstance) {
 
 async function deleteTaskHandler(request: FastifyRequest, reply: FastifyReply) {
 	try {
-		const params = parseSchema(deleteTaskParamsSchema, request.body);
+		const params = parseSchema(deleteTaskParamsSchema, request.params);
 		const user = parseSchema(requestUser, request.user);
 
 		await deleteTask(

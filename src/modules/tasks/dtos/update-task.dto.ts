@@ -2,8 +2,11 @@ import z from "zod";
 
 export const updateTaskBodySchema = z.object({
 	title: z.string().optional(),
-	description: z.string().optional().nullable(),
-	parentId: z.string().uuid().optional().nullable(),
+	description: z.string().nullish(),
+	parentId: z
+		.string()
+		.uuid({ message: "Parent Id should be a valid UUID" })
+		.nullish(),
 	isCompleted: z.coerce.boolean(),
 });
 

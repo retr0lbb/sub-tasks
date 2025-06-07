@@ -1,13 +1,12 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
+import type { CreateProjectBody } from "../dtos/create-project.dto";
+import type { RequestUser } from "../../../utils/request-user.type";
 
-interface ProjectProps {
-	name: string;
-	description: string;
-	userId: string;
-}
-
-export async function createProject(db: PrismaClient, data: ProjectProps) {
+export async function createProject(
+	data: CreateProjectBody & RequestUser,
+	db: PrismaClient,
+) {
 	const user = await db.users.findUnique({
 		where: {
 			id: data.userId,

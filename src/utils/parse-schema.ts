@@ -7,6 +7,7 @@ export function parseSchema<T extends z.ZodRawShape>(
 ) {
 	const parsedSchema = schema.safeParse(data);
 	if (!parsedSchema.success) {
+		console.log(schema._type);
 		throw new InputError(parsedSchema.error.errors);
 	}
 
