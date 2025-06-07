@@ -5,6 +5,7 @@ import { prisma } from "../../../lib/prisma";
 import { requestUser } from "../../../utils/request-user.type";
 import { getTaskParamsSchema } from "../dtos/get-task.dto";
 import { InputError } from "../../../errors/input-error";
+import { parseSchema } from "../../../utils/parse-schema";
 
 export async function getTaskRoute(app: FastifyInstance) {
 	app.get(
@@ -15,22 +16,12 @@ export async function getTaskRoute(app: FastifyInstance) {
 }
 
 async function getTaskHandler(request: FastifyRequest, reply: FastifyReply) {
-	const user = requestUser.safeParse(request.user);
-	const params = getTaskParamsSchema.safeParse(request.params);
-
 	try {
-		if (!user.success) {
-			throw new InputError(user.error.errors);
-		}
+		const params = parseSchema(getTaskParamsSchema, request.params);
+		const user = parseSchema(requestUser, request.user);
 
-		if (!params.success) {
-			throw new InputError(params.error.errors);
-		}
+		const task = await getTask({ ...params, userId: user.id }, prisma);
 
-		const task = await getTask(
-			{ ...params.data, userId: user.data.id },
-			prisma,
-		);
 		reply.status(200).send({
 			data: task,
 		});

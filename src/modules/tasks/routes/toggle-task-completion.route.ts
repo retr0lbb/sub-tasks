@@ -8,6 +8,7 @@ import {
 } from "../dtos/toggle-task-completion.dto";
 import { InputError } from "../../../errors/input-error";
 import { requestUser } from "../../../utils/request-user.type";
+import { parseSchema } from "../../../utils/parse-schema";
 
 export async function toggleTaskCompletionRoute(app: FastifyInstance) {
 	app.put(
@@ -21,28 +22,19 @@ async function toggleTaskCompletionRouteHandler(
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) {
-	const body = toggleTaskCompletionBodySchema.safeParse(request.body);
-	const params = toggleTaskCompletionParamsSchema.safeParse(request.params);
-	const user = requestUser.safeParse(request.user);
-
 	try {
-		if (!body.success) {
-			throw new InputError(body.error.errors);
-		}
-
-		if (!params.success) {
-			throw new InputError(params.error.errors);
-		}
-
-		if (!user.success) {
-			throw new InputError(user.error.errors);
-		}
+		const body = parseSchema(toggleTaskCompletionBodySchema, request.body);
+		const params = parseSchema(
+			toggleTaskCompletionParamsSchema,
+			request.params,
+		);
+		const user = parseSchema(requestUser, request.user);
 
 		toggleTaskCompletion(
 			{
-				...body.data,
-				...params.data,
-				userId: user.data.id,
+				...body,
+				...params,
+				userId: user.id,
 			},
 			prisma,
 		);
