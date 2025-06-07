@@ -3,7 +3,7 @@ import { toggleTaskCompletionRoute } from "./routes/toggle-task-completion.route
 import { createTaskRoute } from "./routes/create-task-route.route";
 import { deleteTaskRoute } from "./routes/delete-task.route";
 import { getTaskRoute } from "./routes/get-task.route";
-import { updateTaskRoute } from "./routes/update-task";
+import { updateTaskRoute } from "./routes/update-task.route";
 
 export async function taskModule(app: FastifyInstance) {
 	app.register(toggleTaskCompletionRoute);

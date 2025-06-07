@@ -8,6 +8,7 @@ import {
 	updateTaskParamsSchema,
 } from "../dtos/update-task.dto";
 import { InputError } from "../../../errors/input-error";
+import { parseSchema } from "../../../utils/parse-schema";
 
 export async function updateTaskRoute(app: FastifyInstance) {
 	app.put(
@@ -18,25 +19,12 @@ export async function updateTaskRoute(app: FastifyInstance) {
 }
 
 async function updateTaskHandler(request: FastifyRequest, reply: FastifyReply) {
-	const body = updateTaskBodySchema.safeParse(request.body);
-	const params = updateTaskParamsSchema.safeParse(request.params);
-	const user = requestUser.safeParse(request.user);
-
 	try {
-		if (!body.success) {
-			throw new InputError(body.error.errors);
-		}
-		if (!params.success) {
-			throw new InputError(params.error.errors);
-		}
-		if (!user.success) {
-			throw new InputError(user.error.errors);
-		}
+		const body = parseSchema(updateTaskBodySchema, request.body);
+		const params = parseSchema(updateTaskParamsSchema, request.params);
+		const user = parseSchema(requestUser, request.user);
 
-		await updateTask(
-			{ ...body.data, ...params.data, userId: user.data.id },
-			prisma,
-		);
+		await updateTask({ ...body, ...params, userId: user.id }, prisma);
 		return reply.status(200).send({
 			message: "task updated successfully!",
 		});
