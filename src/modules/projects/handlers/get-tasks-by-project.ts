@@ -1,15 +1,12 @@
 import { ClientError } from "../../../errors/client-error";
 import type { PrismaClient } from "@prisma/client";
 import { recursiveGetSubtasks } from "../../../utils/iterate-over-subtasks";
-
-interface GetAllTasksByProjectProps {
-	projectId: string;
-	userId: string;
-}
+import type { GetTasksByProjectParams } from "../dtos/get-tasks-by-project.dto";
+import type { RequestUser } from "../../../utils/request-user.type";
 
 export async function getAllTasksByProject(
+	data: GetTasksByProjectParams & RequestUser,
 	db: PrismaClient,
-	data: GetAllTasksByProjectProps,
 ) {
 	const project = await db.projects.findUnique({
 		where: {

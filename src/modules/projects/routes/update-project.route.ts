@@ -1,5 +1,4 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import z from "zod";
 import { requestUser } from "../../../utils/request-user.type";
 import { updateProject } from "../handlers/update-project";
 import { prisma } from "../../../lib/prisma";

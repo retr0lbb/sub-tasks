@@ -2,6 +2,7 @@ import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
 import type { UpdateTaskBody, UpdateTaskParams } from "../dtos/update-task.dto";
 import type { RequestUser } from "../../../utils/request-user.type";
+import { detectLoop } from "../../../utils/detect-loop";
 
 export async function updateTask(
 	data: UpdateTaskBody & UpdateTaskParams & RequestUser,
@@ -30,6 +31,14 @@ export async function updateTask(
 
 	if (!task) {
 		throw new ClientError("Task not found");
+	}
+
+	if (data.parentId && data.parentId === task.id) {
+		throw new ClientError("Task cannot be the parent of itself");
+	}
+
+	if (data.parentId && (await detectLoop(task.id, data.parentId, db))) {
+		throw new ClientError("Task cannot be a child of one of its descendants");
 	}
 
 	await db.tasks.update({
