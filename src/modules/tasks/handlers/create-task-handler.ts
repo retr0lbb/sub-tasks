@@ -1,6 +1,7 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
 import type { CreateTaskBody, CreateTaskParams } from "../dtos/create-task.dto";
+//import { detectLoop } from "../../../utils/detect-loop"; Maybe i need this for later, but i think is ok
 
 export async function createTask(
 	data: CreateTaskBody & CreateTaskParams & { userId: string },
