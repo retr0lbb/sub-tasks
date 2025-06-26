@@ -1,27 +1,22 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
+import type { UpdateBody, UpdateParams } from "../dtos/update-project.dto";
+import type { RequestUser } from "../../../utils/request-user.type";
 
-interface projectData {
-	userId?: string | undefined;
-	description?: string | undefined | null;
-	name?: string | undefined;
-}
 export async function updateProject(
-	data: projectData,
-	userId: string,
-	projectId: string,
+	data: UpdateBody & UpdateParams & RequestUser,
 	db: PrismaClient,
 ) {
 	const project = await db.projects.findUnique({
 		where: {
-			id: projectId,
+			id: data.projectId,
 		},
 	});
 
 	if (!project) {
 		throw new ClientError("Couldn't find project");
 	}
-	if (project.userId !== userId) {
+	if (project.userId !== data.userId) {
 		throw new ClientError("Forbidden");
 	}
 
