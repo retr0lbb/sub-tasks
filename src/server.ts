@@ -14,9 +14,11 @@ import { taskModule } from "./modules/tasks";
 import { projectModule } from "./modules/projects";
 import cookie from "@fastify/cookie";
 import { env } from "./utils/env";
+import { LoggerConfig } from "./config/logger-config";
 
 const app = fastify({
 	requestTimeout: 100000,
+	logger: LoggerConfig,
 });
 app.setErrorHandler(errorHandler);
 
@@ -35,5 +37,6 @@ app
 		port: 3333,
 	})
 	.then(() => {
-		console.log("Http server running");
+		app.log.info("Server started on http://localhost:3333");
+		console.log("server Running");
 	});

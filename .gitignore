@@ -4,3 +4,6 @@ node_modules
 dev.db
 deb.db-journal
 api.http
+./logs.log
+logs.log
+*.log

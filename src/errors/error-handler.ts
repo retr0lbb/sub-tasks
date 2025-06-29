@@ -29,6 +29,17 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
 			.send({ message: "validation Errors", errors: error.errors.flat() });
 	}
 
+	request.log.error(
+		{
+			err: {
+				message: error.message,
+				stack: error.stack,
+				name: error.name,
+			},
+		},
+		"Unhandled Error",
+	);
+
 	return reply
 		.status(error.statusCode ?? 500)
 		.send({ message: "An error occurred", error: error.message });
