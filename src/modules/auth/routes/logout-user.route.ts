@@ -2,6 +2,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { requestUser } from "../../../utils/request-user.type";
 import { LogOutUser } from "../handlers/logout-user";
 import { prisma } from "../../../lib/prisma";
+import { parseSchema } from "../../../utils/parse-schema";
 
 export async function LogOutUserRoute(app: FastifyInstance) {
 	app.post(
@@ -12,10 +13,10 @@ export async function LogOutUserRoute(app: FastifyInstance) {
 }
 
 async function LogOutUserHandler(request: FastifyRequest, reply: FastifyReply) {
-	const { id: userId } = requestUser.parse(request.user);
+	const user = parseSchema(requestUser, request.user);
 
 	try {
-		await LogOutUser(userId, prisma);
+		await LogOutUser(user.id, prisma);
 		reply
 			.status(200)
 			.send({ message: "Logged out of all accounts All accounts" });

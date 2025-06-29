@@ -2,6 +2,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { refreshToken } from "../handlers/refresh-token";
 import { prisma } from "../../../lib/prisma";
+import { parseSchema } from "../../../utils/parse-schema";
 
 export async function refreshTokenRoute(app: FastifyInstance) {
 	app.get("/auth/refresh", refreshTokenHandler);
@@ -15,9 +16,16 @@ async function refreshTokenHandler(
 	const cookieSchema = z.object({
 		refreshToken: z.string().uuid(),
 	});
-	const { refreshToken: refresh } = cookieSchema.parse(request.cookies);
+
+	const cookie = parseSchema(cookieSchema, request.cookies);
+
 	try {
-		const { accessToken } = await refreshToken(refresh, this, prisma);
+		const { accessToken } = await refreshToken(
+			cookie.refreshToken,
+			this,
+			prisma,
+		);
+
 		return reply.status(200).send({ accessToken });
 	} catch (error) {
 		console.log(error);

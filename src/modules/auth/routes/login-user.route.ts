@@ -2,6 +2,8 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { loginUser } from "../handlers/login-user";
 import { prisma } from "../../../lib/prisma";
+import { parseSchema } from "../../../utils/parse-schema";
+import { loginBodySchema } from "../dtos/login.dto";
 
 export async function loginUserRoute(app: FastifyInstance) {
 	app.post("/auth/login", loginUserHandler);
@@ -12,15 +14,10 @@ async function loginUserHandler(
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) {
-	const bodySchema = z.object({
-		email: z.string().email(),
-		password: z.string(),
-	});
-
-	const { email, password } = bodySchema.parse(request.body);
+	const body = parseSchema(loginBodySchema, request.body);
 
 	try {
-		const tokens = await loginUser({ email, password }, prisma, this);
+		const tokens = await loginUser(body, prisma, this);
 		reply.setCookie("refreshToken", tokens.refreshToken, {
 			path: "/",
 			httpOnly: true,

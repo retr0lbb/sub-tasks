@@ -3,13 +3,10 @@ import { ClientError } from "../../../errors/client-error";
 import { compare } from "bcrypt";
 import { randomUUID } from "node:crypto";
 import type { FastifyInstance } from "fastify";
+import type { LoginBody } from "../dtos/login.dto";
 
-interface UserData {
-	email: string;
-	password: string;
-}
 export async function loginUser(
-	data: UserData,
+	data: LoginBody,
 	db: PrismaClient,
 	app: FastifyInstance,
 ) {
