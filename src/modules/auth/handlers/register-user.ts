@@ -2,14 +2,9 @@ import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
 import { genSalt, hash } from "bcrypt";
 import { env } from "../../../utils/env";
+import type { RegisterBody } from "../dtos/register.dto";
 
-interface UserDataProps {
-	userName: string;
-	email: string;
-	password: string;
-}
-
-export async function registerUser(data: UserDataProps, db: PrismaClient) {
+export async function registerUser(data: RegisterBody, db: PrismaClient) {
 	const user = await db.users.findUnique({
 		where: {
 			email: data.email,

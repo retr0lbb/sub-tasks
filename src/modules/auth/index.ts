@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { registerUserRoute } from "./routes/register-user";
+import { registerUserRoute } from "./routes/register-user.route";
 import { loginUserRoute } from "./routes/login-user";
 import { refreshTokenRoute } from "./routes/refresh-token";
 import { LogOutUserRoute } from "./routes/logout-user";
