@@ -4,6 +4,8 @@ import { requestUser } from "../../../utils/request-user.type";
 import { deleteProject } from "../handlers/delete-project";
 import { prisma } from "../../../lib/prisma";
 import { ServerError } from "../../../errors/server.error";
+import { parseSchema } from "../../../utils/parse-schema";
+import { deleteProjectParams } from "../dtos/delete-project.dto";
 
 export async function deleteProjectRoute(app: FastifyInstance) {
 	app.delete(
@@ -18,15 +20,11 @@ async function deleteProjectHandler(
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) {
-	const requestParamsSchema = z.object({
-		projectId: z.string().uuid(),
-	});
-
-	const { projectId } = requestParamsSchema.parse(request.params);
-	const { id: userId } = requestUser.parse(request.user);
+	const user = parseSchema(requestUser, request.user);
+	const params = parseSchema(deleteProjectParams, request.params);
 
 	try {
-		await deleteProject({ projectId, userId }, prisma);
+		await deleteProject({ ...params, userId: user.id }, prisma);
 		return reply.status(200);
 	} catch (error) {
 		throw new ServerError("An error occurred");

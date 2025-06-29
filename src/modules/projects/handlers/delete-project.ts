@@ -1,12 +1,10 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
+import type { RequestUser } from "../../../utils/request-user.type";
+import type { DeleteProjectParams } from "../dtos/delete-project.dto";
 
-interface DeleteProjectProps {
-	projectId: string;
-	userId: string;
-}
 export async function deleteProject(
-	data: DeleteProjectProps,
+	data: RequestUser & DeleteProjectParams,
 	db: PrismaClient,
 ) {
 	const user = await db.users.findUnique({

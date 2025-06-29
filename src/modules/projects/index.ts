@@ -1,8 +1,8 @@
 import type { FastifyInstance } from "fastify";
 
 import { createProjectRoute } from "./routes/create-project";
-import { deleteProjectRoute } from "./routes/delete-project";
-import { getAllTasksRoute } from "./routes/get-tasks-by-project";
+import { deleteProjectRoute } from "./routes/delete-project.route";
+import { getAllTasksRoute } from "./routes/get-tasks-by-project.route";
 import { updateProjectRoute } from "./routes/update-project.route";
 import { listUserProjectsRoute } from "./routes/list-projects.route";
 
