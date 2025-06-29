@@ -26,4 +26,24 @@ describe("complete task handler test case", () => {
 		).resolves.toBeUndefined();
 		expect(prisma.tasks.updateMany).toHaveBeenCalledOnce();
 	});
+
+	it("Should return error if project not found", async () => {
+		prisma.users.findUnique.mockResolvedValue(createUserFactory());
+		prisma.projects.findUnique.mockResolvedValue(null);
+		prisma.tasks.findUnique.mockResolvedValue(createTaskFactory());
+		prisma.tasks.findMany.mockResolvedValue([]);
+		prisma.tasks.updateMany.mockResolvedValue({ count: 1 });
+
+		await expect(
+			toggleTaskCompletion(
+				{
+					userId: "user-id",
+					projectId: "project-id",
+					taskId: "task-id",
+					isCompleted: true,
+				},
+				prisma,
+			),
+		).rejects.toThrowError("Project does not exists");
+	});
 });
