@@ -13,10 +13,10 @@ At present, this project is a good ol’ Node.js API, but hold onto your hats! T
 - [✅] on task completion also completes subtasks
 - [✅] login system with sessions and jwt
 - [✅] Validação de dados com biblioteca dedicada (ex: Zod, Joi)
-- [] Logs estruturados e centralizados com Winston ou Pino
+- [✅] Logs estruturados e centralizados com Pino
 - [ ] Pipeline de CI/CD com testes e lint via GitHub Actions
 - [ ] Documentação automática da API com Swagger
-- [ ] Testes automatizados (unitários e end-to-end)
+- [✅] Testes automatizados Unitarios
 - [ ] Healthcheck para monitoramento da API
 
 ### ✅ Em andamento / Planejadas (backend best practices)
@@ -31,4 +31,4 @@ At present, this project is a good ol’ Node.js API, but hold onto your hats! T
 - [ ] Compartilhamento de tarefas entre usuários
 - [ ] Notificações (e-mail ou webhook) ao completar tarefas
 - [ ] Ordenação manual das subtasks
-
+- [ ] Redis para armazenar os ancestrais de arvores de tasks, permitindo uso de cache

@@ -5,6 +5,7 @@ import type {
 	ToggleTaskCompletionParams,
 } from "../dtos/toggle-task-completion.dto";
 import type { RequestUser } from "../../../utils/request-user.type";
+import { ServerError } from "../../../errors/server.error";
 
 export async function toggleTaskCompletion(
 	data: ToggleTaskCompletionBody & ToggleTaskCompletionParams & RequestUser,
@@ -70,14 +71,23 @@ interface TasksIdAndParentId {
 async function getAllTaskIdsRecursively(
 	parentTaskId: string,
 	db: PrismaClient,
+	numberOfIterations = 0,
 ): Promise<TasksIdAndParentId[]> {
-	const subtasks = await db.tasks.findMany({
-		where: { parentId: parentTaskId },
-		select: { id: true, parentId: true },
-	});
+	const MAX_TRIES = 200;
+	if (numberOfIterations > MAX_TRIES) {
+		throw new Error("Max recursion achieved");
+	}
+
+	const subtasks =
+		(await db.tasks.findMany({
+			where: { parentId: parentTaskId },
+			select: { id: true, parentId: true },
+		})) || [];
 
 	const nestedTasks = await Promise.all(
-		subtasks.map((task) => getAllTaskIdsRecursively(task.id, db)),
+		subtasks.map((task) =>
+			getAllTaskIdsRecursively(task.id, db, numberOfIterations + 1),
+		),
 	);
 
 	return [
@@ -86,3 +96,5 @@ async function getAllTaskIdsRecursively(
 		...nestedTasks.flat(),
 	];
 }
+
+/** Smelly Ahhh Code */
