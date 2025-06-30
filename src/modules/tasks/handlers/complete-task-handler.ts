@@ -5,7 +5,6 @@ import type {
 	ToggleTaskCompletionParams,
 } from "../dtos/toggle-task-completion.dto";
 import type { RequestUser } from "../../../utils/request-user.type";
-import { ServerError } from "../../../errors/server.error";
 
 export async function toggleTaskCompletion(
 	data: ToggleTaskCompletionBody & ToggleTaskCompletionParams & RequestUser,
@@ -97,4 +96,7 @@ async function getAllTaskIdsRecursively(
 	];
 }
 
-/** Smelly Ahhh Code */
+/** Smelly Ahhh Code
+ *
+ * 				Super Smelly Code UwU
+ */
