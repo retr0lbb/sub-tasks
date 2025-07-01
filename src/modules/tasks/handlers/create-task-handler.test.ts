@@ -4,6 +4,7 @@ import prisma from "../../../lib/__mocks__/prisma";
 import { createProjectFactory } from "../../../test/factory/project.factory";
 import { createUserFactory } from "../../../test/factory/user.factory";
 import { createTaskFactory } from "../../../test/factory/task.factory";
+import { ClientError } from "../../../errors/client-error";
 
 describe("Create Task Test Case", () => {
 	it("Should be able to create task with no problem", async () => {
@@ -80,5 +81,43 @@ describe("Create Task Test Case", () => {
 				prisma,
 			),
 		).rejects.toThrowError("User not found");
+	});
+
+	it("Should return an error if the parent task doesn't exist.", async () => {
+		prisma.projects.findUnique.mockResolvedValue(createProjectFactory());
+		prisma.users.findUnique.mockResolvedValue(createUserFactory());
+		prisma.tasks.findUnique.mockResolvedValue(null);
+
+		await expect(
+			createTask(
+				{
+					projectId: "valid-project-id",
+					title: "some-title",
+					parentId: "inexistent-task-id",
+					userId: "valid-user-id",
+					description: null,
+				},
+				prisma,
+			),
+		).rejects.toThrowError("Parent task not found");
+	});
+
+	it("Should be able to create an task successfully passing parent id", async () => {
+		prisma.projects.findUnique.mockResolvedValue(createProjectFactory());
+		prisma.users.findUnique.mockResolvedValue(createUserFactory());
+		prisma.tasks.findUnique.mockResolvedValue(createTaskFactory());
+
+		await expect(
+			createTask(
+				{
+					projectId: "valid-project-id",
+					title: "some-title",
+					parentId: "inexistent-task-id",
+					userId: "valid-user-id",
+					description: null,
+				},
+				prisma,
+			),
+		).resolves.toBeUndefined();
 	});
 });
