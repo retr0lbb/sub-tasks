@@ -15,7 +15,7 @@ export async function updateTask(
 	});
 
 	if (!project) {
-		throw new ClientError("Cant find project");
+		throw new ClientError("Project not found");
 	}
 
 	if (project.userId !== data.userId) {
@@ -54,6 +54,4 @@ export async function updateTask(
 			title: data.title,
 		},
 	});
-
-	return;
 }

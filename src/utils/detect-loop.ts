@@ -8,7 +8,8 @@ export async function detectLoop(
 ): Promise<boolean> {
 	let currentParentId = potentialParentId;
 
-	//Just for control
+	console.log("Passou aqui");
+
 	let iteration = 0;
 	const maxIteration = 1_000;
 
