@@ -150,5 +150,7 @@ describe("Test Case for get tasks", () => {
 				}),
 			],
 		});
+
+		expect(prisma.tasks.findMany).toHaveBeenCalledTimes(2);
 	});
 });
