@@ -25,11 +25,12 @@ export async function recursiveGetSubtasks(
 
 	if (!task) throw new ClientError("Task not found");
 
-	const subtasks = await db.tasks.findMany({
-		where: {
-			parentId: task.id,
-		},
-	});
+	const subtasks =
+		(await db.tasks.findMany({
+			where: {
+				parentId: task.id,
+			},
+		})) || [];
 
 	const formattedSubtasks = await Promise.all(
 		subtasks.map(async (sub) => await recursiveGetSubtasks(db, sub, depth + 1)),

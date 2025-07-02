@@ -15,7 +15,7 @@ export async function getTask(
 	});
 
 	if (!project) {
-		throw new ClientError("Project does not exists");
+		throw new ClientError("Project does not exist");
 	}
 
 	const user = await db.users.findUnique({
@@ -28,7 +28,7 @@ export async function getTask(
 		throw new ClientError("User not found");
 	}
 
-	if (project.userId !== data.userId) {
+	if (project.userId !== user.id) {
 		throw new ClientError("Forbidden");
 	}
 

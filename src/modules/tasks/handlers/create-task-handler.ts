@@ -35,31 +35,26 @@ export async function createTask(
 		throw new Error("User not found");
 	}
 
-	try {
-		if (data.parentId !== null && data.parentId !== undefined) {
-			const parentTask = await db.tasks.findUnique({
-				where: {
-					id: data.parentId,
-				},
-			});
-
-			if (parentTask === null && !parentTask) {
-				throw new ClientError("Parent task not found");
-			}
-		}
-
-		const result = await db.tasks.create({
-			data: {
-				title: data.title,
-				description: data.description,
-				parentId: data.parentId,
-				projectId: data.projectId,
+	if (data.parentId !== null && data.parentId !== undefined) {
+		const parentTask = await db.tasks.findUnique({
+			where: {
+				id: data.parentId,
 			},
 		});
 
-		return result;
-	} catch (error) {
-		console.error(error);
-		throw error;
+		if (parentTask === null && !parentTask) {
+			throw new ClientError("Parent task not found");
+		}
 	}
+
+	const result = await db.tasks.create({
+		data: {
+			title: data.title,
+			description: data.description,
+			parentId: data.parentId,
+			projectId: data.projectId,
+		},
+	});
+
+	return result;
 }
