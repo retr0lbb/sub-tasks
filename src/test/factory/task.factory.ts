@@ -9,5 +9,6 @@ export function createTaskFactory(overrides = {}) {
 
 		parentId: null,
 		projectId: "valid project id",
+		...overrides,
 	};
 }
