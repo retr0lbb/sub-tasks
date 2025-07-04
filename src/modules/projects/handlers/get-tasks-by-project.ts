@@ -18,10 +18,6 @@ export async function getAllTasksByProject(
 		throw new ClientError("Project not found");
 	}
 
-	if (project.userId !== data.userId) {
-		throw new ClientError("Forbidden");
-	}
-
 	const user = await db.users.findUnique({
 		where: {
 			id: data.userId,
@@ -29,7 +25,11 @@ export async function getAllTasksByProject(
 	});
 
 	if (!user) {
-		throw new ClientError("User not found in our database");
+		throw new ClientError("User not found");
+	}
+
+	if (project.userId !== user.id) {
+		throw new ClientError("Forbidden");
 	}
 
 	const topLevelTasks = await db.tasks.findMany({
