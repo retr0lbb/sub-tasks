@@ -6,7 +6,7 @@ import type { DeleteProjectParams } from "../dtos/delete-project.dto";
 export async function deleteProject(
 	data: RequestUser & DeleteProjectParams,
 	db: PrismaClient,
-) {
+): Promise<void> {
 	const user = await db.users.findUnique({
 		where: {
 			id: data.userId,
@@ -24,10 +24,10 @@ export async function deleteProject(
 	});
 
 	if (!project) {
-		throw new ClientError("This project already doesn't exists.");
+		return;
 	}
 
-	if (project.userId !== null && project.userId !== data.userId) {
+	if (project.userId !== null && project.userId !== user.id) {
 		throw new ClientError("Cannot delete a project that is not yours");
 	}
 
@@ -36,4 +36,5 @@ export async function deleteProject(
 			id: data.projectId,
 		},
 	});
+	return;
 }
