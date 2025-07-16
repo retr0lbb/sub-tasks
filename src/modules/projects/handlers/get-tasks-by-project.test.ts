@@ -53,4 +53,33 @@ describe("Get Tasks by project", async () => {
 			),
 		).rejects.toThrowError("User is not the owner of the project");
 	});
+
+	it("should return an error if user don't exists", async () => {
+		prisma.projects.findUnique.mockResolvedValue(createProjectFactory());
+		prisma.users.findUnique.mockResolvedValue(null);
+
+		expect(
+			getAllTasksByProject(
+				{
+					projectId: "valid-project-id",
+					userId: "valid-user-id",
+				},
+				prisma,
+			),
+		).rejects.toThrowError("User not found");
+	});
+
+	it("should return an error if project don't exists", async () => {
+		prisma.projects.findUnique.mockResolvedValue(null);
+
+		expect(
+			getAllTasksByProject(
+				{
+					projectId: "valid-project-id",
+					userId: "valid-user-id",
+				},
+				prisma,
+			),
+		).rejects.toThrowError("Project not found");
+	});
 });

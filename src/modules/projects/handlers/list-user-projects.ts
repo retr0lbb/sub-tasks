@@ -16,6 +16,12 @@ export async function listUserProjects(userId: string, db: PrismaClient) {
 		where: {
 			userId: userId,
 		},
+		select: {
+			_count: true,
+			name: true,
+			description: true,
+			id: true,
+		},
 	});
 
 	return userProjects;
