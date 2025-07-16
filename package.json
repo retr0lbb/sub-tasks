@@ -1,32 +1,33 @@
 {
-  "name": "subtask",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "dev": "tsx watch --env-file=.env src/server.ts",
-    "test": "vitest"
-  },
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@fastify/cookie": "^11.0.2",
-    "@fastify/jwt": "^9.1.0",
-    "@prisma/client": "^6.4.0",
-    "bcrypt": "^6.0.0",
-    "fastify": "^5.2.1",
-    "fastify-plugin": "^5.0.1",
-    "prisma": "^6.4.0",
-    "zod": "^3.24.2"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@types/bcrypt": "^5.0.2",
-    "@types/node": "^22.13.4",
-    "@vitest/ui": "^3.2.4",
-    "tsx": "^4.20.3",
-    "typescript": "^5.7.3",
-    "vitest": "^3.2.4",
-    "vitest-mock-extended": "^3.1.0"
-  }
+	"name": "subtask",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"dev": "tsx watch --env-file=.env src/server.ts",
+		"start": "tsup",
+		"test": "vitest"
+	},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"@fastify/cookie": "^11.0.2",
+		"@fastify/jwt": "^9.1.0",
+		"@prisma/client": "^6.4.0",
+		"bcrypt": "^6.0.0",
+		"fastify": "^5.2.1",
+		"fastify-plugin": "^5.0.1",
+		"prisma": "^6.4.0",
+		"zod": "^3.24.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/bcrypt": "^5.0.2",
+		"@types/node": "^22.13.4",
+		"@vitest/ui": "^3.2.4",
+		"tsx": "^4.20.3",
+		"typescript": "^5.7.3",
+		"vitest": "^3.2.4",
+		"vitest-mock-extended": "^3.1.0"
+	}
 }

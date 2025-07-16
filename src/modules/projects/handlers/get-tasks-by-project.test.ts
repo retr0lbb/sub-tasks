@@ -7,9 +7,14 @@ import { describe, expect, it } from "vitest";
 
 describe("Get Tasks by project", async () => {
 	it("Should be able to get all task recursively", async () => {
+		const now = new Date();
+
 		prisma.projects.findUnique.mockResolvedValue(createProjectFactory());
 		prisma.users.findUnique.mockResolvedValue(createUserFactory());
-		prisma.tasks.findMany.mockResolvedValueOnce([createTaskFactory()]);
+		prisma.tasks.findMany.mockResolvedValueOnce([
+			createTaskFactory({ createdAt: now }),
+		]);
+
 		expect(
 			getAllTasksByProject(
 				{
@@ -20,7 +25,7 @@ describe("Get Tasks by project", async () => {
 			),
 		).resolves.toEqual([
 			{
-				createdAt: "2025-07-04T22:06:56.283Z",
+				createdAt: now,
 				description: "task-description",
 				id: "valid-user-id",
 				isCompleted: false,
@@ -31,5 +36,21 @@ describe("Get Tasks by project", async () => {
 				updatedAt: null,
 			},
 		]);
+	});
+
+	it("should return an error if user is not the owner of the project", async () => {
+		prisma.projects.findUnique.mockResolvedValue(createProjectFactory());
+		prisma.users.findUnique.mockResolvedValue(
+			createUserFactory({ id: "other user id" }),
+		);
+		expect(
+			getAllTasksByProject(
+				{
+					projectId: "valid-project-id",
+					userId: "valid-user-id",
+				},
+				prisma,
+			),
+		).rejects.toThrowError("User is not the owner of the project");
 	});
 });

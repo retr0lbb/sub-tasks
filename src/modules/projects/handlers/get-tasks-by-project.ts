@@ -29,7 +29,7 @@ export async function getAllTasksByProject(
 	}
 
 	if (project.userId !== user.id) {
-		throw new ClientError("Forbidden");
+		throw new ClientError("User is not the owner of the project");
 	}
 
 	const topLevelTasks = await db.tasks.findMany({
