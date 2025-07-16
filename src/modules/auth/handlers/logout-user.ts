@@ -1,6 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../../../errors/client-error";
-import { prisma } from "../../../lib/prisma";
 
 export async function LogOutUser(userId: string, db: PrismaClient) {
 	const user = await db.users.findUnique({

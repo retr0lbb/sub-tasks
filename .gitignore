@@ -7,3 +7,5 @@ api.http
 ./logs.log
 logs.log
 *.log
+
+.github
