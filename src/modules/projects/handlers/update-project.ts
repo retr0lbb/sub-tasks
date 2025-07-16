@@ -14,7 +14,7 @@ export async function updateProject(
 	});
 
 	if (!project) {
-		throw new ClientError("Couldn't find project");
+		throw new ClientError("Project Not Found");
 	}
 	if (project.userId !== data.userId) {
 		throw new ClientError("Forbidden");
