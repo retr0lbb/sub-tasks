@@ -7,6 +7,7 @@ const envSchema = z.object({
 	COOKIE_SECRET: z.string(),
 	COOKIE_PREFIX: z.string(),
 	ENVIRONMENT: z.string().nonempty(),
+	FRONT_END_URL: z.string(),
 });
 
 export const env = envSchema.parse(process.env);
