@@ -11,6 +11,7 @@ export async function registerUserRoute(app: FastifyInstance) {
 			schema: {
 				tags: ["Auth"],
 				summary: "Creates a new user account",
+				description: "creates a user index in the database",
 				body: registerBodySchema,
 			},
 		},

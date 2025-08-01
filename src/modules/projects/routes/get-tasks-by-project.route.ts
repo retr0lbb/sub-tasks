@@ -8,7 +8,14 @@ import { getTasksByProjectParamsSchema } from "../dtos/get-tasks-by-project.dto"
 export async function getAllTasksRoute(app: FastifyInstance) {
 	app.get(
 		"/project/:projectId/tasks",
-		{ onRequest: [app.authenticate], schema: { tags: ["Project", "Tasks"] } },
+		{
+			onRequest: [app.authenticate],
+			schema: {
+				tags: ["Tasks"],
+				params: getTasksByProjectParamsSchema,
+				summary: "Get all project tasks",
+			},
+		},
 		getAllTasksHandler,
 	);
 }

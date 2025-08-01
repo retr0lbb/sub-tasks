@@ -5,7 +5,17 @@ import { prisma } from "../../../lib/prisma";
 import { parseSchema } from "../../../utils/parse-schema";
 
 export async function refreshTokenRoute(app: FastifyInstance) {
-	app.get("/auth/refresh", { schema: { tags: ["Auth"] } }, refreshTokenHandler);
+	app.get(
+		"/auth/refresh",
+		{
+			schema: {
+				tags: ["Auth"],
+				summary: "Refresh user's JWT token",
+				description: "Revalidates users JWT token using HttpOnly token",
+			},
+		},
+		refreshTokenHandler,
+	);
 }
 
 async function refreshTokenHandler(

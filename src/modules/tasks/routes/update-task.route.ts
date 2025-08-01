@@ -11,7 +11,17 @@ import { parseSchema } from "../../../utils/parse-schema";
 export async function updateTaskRoute(app: FastifyInstance) {
 	app.put(
 		"/project/:projectId/tasks/:taskId",
-		{ onRequest: [app.authenticate], schema: { tags: ["Tasks"] } },
+		{
+			onRequest: [app.authenticate],
+			schema: {
+				tags: ["Tasks"],
+				summary: "Update a task",
+				description:
+					"Update all fields of a task and checks for loops in updates",
+				body: updateTaskBodySchema,
+				params: updateTaskParamsSchema,
+			},
+		},
 		updateTaskHandler,
 	);
 }

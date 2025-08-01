@@ -13,7 +13,16 @@ import { parseSchema } from "../../../utils/parse-schema";
 export async function toggleTaskCompletionRoute(app: FastifyInstance) {
 	app.put(
 		"/project/:projectId/tasks/:taskId/complete",
-		{ onRequest: [app.authenticate], schema: { tags: ["Tasks"] } },
+		{
+			onRequest: [app.authenticate],
+			schema: {
+				tags: ["Tasks"],
+				summary: "mark as completed or uncompleted task and its subtasks",
+				description: "Mark as complete or uncompleted task and its subtasks",
+				body: toggleTaskCompletionBodySchema,
+				params: toggleTaskCompletionParamsSchema,
+			},
+		},
 		toggleTaskCompletionRouteHandler,
 	);
 }

@@ -9,7 +9,16 @@ import { createProjectBodySchema } from "../dtos/create-project.dto";
 export async function createProjectRoute(app: FastifyInstance) {
 	app.post(
 		"/project",
-		{ onRequest: [app.authenticate], schema: { tags: ["Project"] } },
+		{
+			onRequest: [app.authenticate],
+			schema: {
+				tags: ["Project"],
+				body: createProjectBodySchema,
+				summary: "Creates a new project",
+				description:
+					"creates a new project connected with the user by passing jwt token",
+			},
+		},
 		createProjectHandler,
 	);
 }

@@ -11,7 +11,16 @@ import {
 export async function updateProjectRoute(app: FastifyInstance) {
 	app.put(
 		"/project/:projectId",
-		{ onRequest: [app.authenticate], schema: { tags: ["Project"] } },
+		{
+			onRequest: [app.authenticate],
+			schema: {
+				tags: ["Project"],
+				body: updateBodySchema,
+				params: updateParamsSchema,
+				summary: "Updates an existing user project",
+				description: "Updates an existing user project",
+			},
+		},
 		updateProjectHandler,
 	);
 }

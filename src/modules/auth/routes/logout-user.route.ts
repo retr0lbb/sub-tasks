@@ -11,6 +11,9 @@ export async function LogOutUserRoute(app: FastifyInstance) {
 			onRequest: [app.authenticate],
 			schema: {
 				tags: ["Auth"],
+				summary: "Delete user's previous session.",
+				description:
+					"Disconnects User with his session and invalidates all refresh tokens in this section",
 			},
 		},
 		LogOutUserHandler,

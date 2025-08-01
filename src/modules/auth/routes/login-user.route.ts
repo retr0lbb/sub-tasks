@@ -12,6 +12,7 @@ export async function loginUserRoute(app: FastifyInstance) {
 			schema: {
 				tags: ["Auth"],
 				description: "Validade Login from an existing user",
+				summary: "Login existing user",
 				body: loginBodySchema,
 				response: {
 					200: z.object({ message: z.string(), accessToken: z.string() }),

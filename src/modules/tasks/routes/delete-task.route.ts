@@ -10,7 +10,15 @@ import { parseSchema } from "../../../utils/parse-schema";
 export async function deleteTaskRoute(app: FastifyInstance) {
 	app.delete(
 		"/project/:projectId/tasks/:taskId",
-		{ onRequest: [app.authenticate], schema: { tags: ["Tasks"] } },
+		{
+			onRequest: [app.authenticate],
+			schema: {
+				tags: ["Tasks"],
+				params: deleteTaskParamsSchema,
+				summary: "deletes an existing project",
+				description: "Deletes an existing project",
+			},
+		},
 		deleteTaskHandler,
 	);
 }

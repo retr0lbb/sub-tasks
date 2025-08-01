@@ -10,7 +10,15 @@ import { deleteProjectParams } from "../dtos/delete-project.dto";
 export async function deleteProjectRoute(app: FastifyInstance) {
 	app.delete(
 		"/project/:projectId",
-		{ onRequest: [app.authenticate], schema: { tags: ["Project"] } },
+		{
+			onRequest: [app.authenticate],
+			schema: {
+				tags: ["Project"],
+				params: deleteProjectParams,
+				summary: "deletes existing project",
+				description: "Delete a project in database",
+			},
+		},
 		deleteProjectHandler,
 	);
 }

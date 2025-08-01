@@ -8,11 +8,21 @@ import {
 } from "../dtos/create-task.dto";
 import { InputError } from "../../../errors/input-error";
 import { parseSchema } from "../../../utils/parse-schema";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function createTaskRoute(app: FastifyInstance) {
-	app.post(
+	app.withTypeProvider<ZodTypeProvider>().post(
 		"/project/:projectId/tasks",
-		{ onRequest: [app.authenticate], schema: { tags: ["Tasks"] } },
+		{
+			onRequest: [app.authenticate],
+			schema: {
+				tags: ["Tasks"],
+				summary: "creates a new task",
+				description: "Creates a new task for a project",
+				body: createTaskBodySchema,
+				params: createTaskParamsSchema,
+			},
+		},
 		createTaskHandler,
 	);
 }
