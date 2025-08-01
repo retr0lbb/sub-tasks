@@ -12,7 +12,7 @@ import { parseSchema } from "../../../utils/parse-schema";
 export async function createTaskRoute(app: FastifyInstance) {
 	app.post(
 		"/project/:projectId/tasks",
-		{ onRequest: [app.authenticate] },
+		{ onRequest: [app.authenticate], schema: { tags: ["Tasks"] } },
 		createTaskHandler,
 	);
 }

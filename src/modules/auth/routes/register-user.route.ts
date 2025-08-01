@@ -1,12 +1,21 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import z from "zod";
 import { registerUser } from "../handlers/register-user";
 import { prisma } from "../../../lib/prisma";
-import { registerBodySchema } from "../dtos/register.dto";
+import { registerBodySchema, RegisterBody } from "../dtos/register.dto";
 import { parseSchema } from "../../../utils/parse-schema";
 
 export async function registerUserRoute(app: FastifyInstance) {
-	app.post("/auth/register", registerUserHandler);
+	app.post(
+		"/auth/register",
+		{
+			schema: {
+				tags: ["Auth"],
+				summary: "Creates a new user account",
+				body: registerBodySchema,
+			},
+		},
+		registerUserHandler,
+	);
 }
 
 async function registerUserHandler(

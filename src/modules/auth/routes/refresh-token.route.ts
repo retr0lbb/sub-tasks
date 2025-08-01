@@ -1,11 +1,11 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import z from "zod";
+import z from "zod/v4";
 import { refreshToken } from "../handlers/refresh-token";
 import { prisma } from "../../../lib/prisma";
 import { parseSchema } from "../../../utils/parse-schema";
 
 export async function refreshTokenRoute(app: FastifyInstance) {
-	app.get("/auth/refresh", refreshTokenHandler);
+	app.get("/auth/refresh", { schema: { tags: ["Auth"] } }, refreshTokenHandler);
 }
 
 async function refreshTokenHandler(

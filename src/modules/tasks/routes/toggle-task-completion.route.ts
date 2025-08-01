@@ -13,7 +13,7 @@ import { parseSchema } from "../../../utils/parse-schema";
 export async function toggleTaskCompletionRoute(app: FastifyInstance) {
 	app.put(
 		"/project/:projectId/tasks/:taskId/complete",
-		{ onRequest: [app.authenticate] },
+		{ onRequest: [app.authenticate], schema: { tags: ["Tasks"] } },
 		toggleTaskCompletionRouteHandler,
 	);
 }

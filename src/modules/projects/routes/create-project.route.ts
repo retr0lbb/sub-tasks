@@ -7,7 +7,11 @@ import { parseSchema } from "../../../utils/parse-schema";
 import { createProjectBodySchema } from "../dtos/create-project.dto";
 
 export async function createProjectRoute(app: FastifyInstance) {
-	app.post("/project", { onRequest: [app.authenticate] }, createProjectHandler);
+	app.post(
+		"/project",
+		{ onRequest: [app.authenticate], schema: { tags: ["Project"] } },
+		createProjectHandler,
+	);
 }
 
 async function createProjectHandler(

@@ -1,4 +1,4 @@
-import z from "zod";
+import z from "zod/v4";
 
 export const deleteTaskParamsSchema = z.object({
 	projectId: z.string().uuid({ message: "Project Id should be a valid UUID" }),

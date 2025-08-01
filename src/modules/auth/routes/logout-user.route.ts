@@ -7,7 +7,12 @@ import { parseSchema } from "../../../utils/parse-schema";
 export async function LogOutUserRoute(app: FastifyInstance) {
 	app.post(
 		"/auth/logout",
-		{ onRequest: [app.authenticate] },
+		{
+			onRequest: [app.authenticate],
+			schema: {
+				tags: ["Auth"],
+			},
+		},
 		LogOutUserHandler,
 	);
 }

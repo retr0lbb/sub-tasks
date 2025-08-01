@@ -10,7 +10,7 @@ import { parseSchema } from "../../../utils/parse-schema";
 export async function getTaskRoute(app: FastifyInstance) {
 	app.get(
 		"/project/:projectId/tasks/:taskId",
-		{ onRequest: [app.authenticate] },
+		{ onRequest: [app.authenticate], schema: { tags: ["Tasks"] } },
 		getTaskHandler,
 	);
 }

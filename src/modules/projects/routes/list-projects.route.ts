@@ -7,7 +7,7 @@ import { parseSchema } from "../../../utils/parse-schema";
 export async function listUserProjectsRoute(app: FastifyInstance) {
 	app.get(
 		"/project",
-		{ onRequest: [app.authenticate] },
+		{ onRequest: [app.authenticate], schema: { tags: ["Project"] } },
 		listUserProjectsHandler,
 	);
 }

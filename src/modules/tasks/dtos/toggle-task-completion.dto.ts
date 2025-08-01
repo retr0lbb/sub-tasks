@@ -1,4 +1,4 @@
-import z from "zod";
+import z from "zod/v4";
 
 export const toggleTaskCompletionBodySchema = z.object({
 	isCompleted: z.coerce.boolean({ message: "Only boolean types are accepted" }),

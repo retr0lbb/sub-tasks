@@ -1,4 +1,4 @@
-import type z from "zod";
+import type z from "zod/v4";
 import { InputError } from "../errors/input-error";
 
 export function parseSchema<T extends z.ZodRawShape>(
@@ -7,8 +7,7 @@ export function parseSchema<T extends z.ZodRawShape>(
 ) {
 	const parsedSchema = schema.safeParse(data);
 	if (!parsedSchema.success) {
-		console.log(schema._type);
-		throw new InputError(parsedSchema.error.errors);
+		throw new InputError(parsedSchema.error.issues);
 	}
 
 	return parsedSchema.data;
