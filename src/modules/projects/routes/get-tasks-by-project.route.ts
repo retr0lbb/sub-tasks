@@ -12,6 +12,7 @@ export async function getAllTasksRoute(app: FastifyInstance) {
 			onRequest: [app.authenticate],
 			schema: {
 				tags: ["Tasks"],
+				security: [{ bearerAuth: [] }],
 				params: getTasksByProjectParamsSchema,
 				summary: "Get all project tasks",
 			},

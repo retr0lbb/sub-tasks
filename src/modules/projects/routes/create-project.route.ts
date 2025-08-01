@@ -13,10 +13,11 @@ export async function createProjectRoute(app: FastifyInstance) {
 			onRequest: [app.authenticate],
 			schema: {
 				tags: ["Project"],
+				security: [{ bearerAuth: [] }],
 				body: createProjectBodySchema,
 				summary: "Creates a new project",
 				description:
-					"creates a new project connected with the user by passing jwt token",
+					"creates a new project connected with the user by passing jwt token, requires Authorization Header Authorization: Bearer <token>",
 			},
 		},
 		createProjectHandler,

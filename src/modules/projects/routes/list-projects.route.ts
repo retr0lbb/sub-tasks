@@ -11,6 +11,7 @@ export async function listUserProjectsRoute(app: FastifyInstance) {
 			onRequest: [app.authenticate],
 			schema: {
 				tags: ["Project"],
+				security: [{ bearerAuth: [] }],
 				summary: "List all user's projects",
 				description: "List all user projects",
 			},

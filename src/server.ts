@@ -44,6 +44,20 @@ app.register(swagger, {
 			title: "SubTasks",
 			version: "1.0.0",
 		},
+		components: {
+			securitySchemes: {
+				bearerAuth: {
+					type: "http",
+					scheme: "bearer",
+					bearerFormat: "JWT",
+				},
+			},
+		},
+		security: [
+			{
+				bearerAuth: [],
+			},
+		],
 		servers: [],
 	},
 	transform: createJsonSchemaTransform({

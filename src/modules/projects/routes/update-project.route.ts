@@ -15,6 +15,7 @@ export async function updateProjectRoute(app: FastifyInstance) {
 			onRequest: [app.authenticate],
 			schema: {
 				tags: ["Project"],
+				security: [{ bearerAuth: [] }],
 				body: updateBodySchema,
 				params: updateParamsSchema,
 				summary: "Updates an existing user project",

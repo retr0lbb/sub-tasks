@@ -14,6 +14,7 @@ export async function deleteProjectRoute(app: FastifyInstance) {
 			onRequest: [app.authenticate],
 			schema: {
 				tags: ["Project"],
+				security: [{ bearerAuth: [] }],
 				params: deleteProjectParams,
 				summary: "deletes existing project",
 				description: "Delete a project in database",
