@@ -7,9 +7,10 @@ import {
 	updateBodySchema,
 	updateParamsSchema,
 } from "../dtos/update-project.dto";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function updateProjectRoute(app: FastifyInstance) {
-	app.put(
+	app.withTypeProvider<ZodTypeProvider>().put(
 		"/project/:projectId",
 		{
 			onRequest: [app.authenticate],
@@ -22,29 +23,24 @@ export async function updateProjectRoute(app: FastifyInstance) {
 				description: "Updates an existing user project",
 			},
 		},
-		updateProjectHandler,
+		async (request, reply) => {
+			const body = parseSchema(updateBodySchema, request.body);
+			const params = parseSchema(updateParamsSchema, request.params);
+			const user = parseSchema(requestUser, request.user);
+
+			try {
+				const data = await updateProject(
+					{ ...body, ...params, userId: user.id },
+					prisma,
+				);
+
+				return reply
+					.status(200)
+					.send({ message: "Project updated Successfully", data });
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
 	);
-}
-
-async function updateProjectHandler(
-	request: FastifyRequest,
-	reply: FastifyReply,
-) {
-	const body = parseSchema(updateBodySchema, request.body);
-	const params = parseSchema(updateParamsSchema, request.params);
-	const user = parseSchema(requestUser, request.user);
-
-	try {
-		const data = await updateProject(
-			{ ...body, ...params, userId: user.id },
-			prisma,
-		);
-
-		return reply
-			.status(200)
-			.send({ message: "Project updated Successfully", data });
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
 }

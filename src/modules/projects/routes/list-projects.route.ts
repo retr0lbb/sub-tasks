@@ -3,9 +3,10 @@ import { requestUser } from "../../../utils/request-user.type";
 import { listUserProjects } from "../handlers/list-user-projects";
 import { prisma } from "../../../lib/prisma";
 import { parseSchema } from "../../../utils/parse-schema";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function listUserProjectsRoute(app: FastifyInstance) {
-	app.get(
+	app.withTypeProvider<ZodTypeProvider>().get(
 		"/project",
 		{
 			onRequest: [app.authenticate],
@@ -16,22 +17,16 @@ export async function listUserProjectsRoute(app: FastifyInstance) {
 				description: "List all user projects",
 			},
 		},
-		listUserProjectsHandler,
+		async (request, reply) => {
+			const user = parseSchema(requestUser, request.user);
+
+			try {
+				const projects = await listUserProjects(user.id, prisma);
+				return reply.status(200).send({ data: projects });
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
 	);
-}
-
-async function listUserProjectsHandler(
-	this: FastifyInstance,
-	request: FastifyRequest,
-	reply: FastifyReply,
-) {
-	const user = parseSchema(requestUser, request.user);
-
-	try {
-		const projects = await listUserProjects(user.id, prisma);
-		return reply.status(200).send({ data: projects });
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
 }

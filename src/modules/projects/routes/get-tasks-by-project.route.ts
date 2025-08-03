@@ -1,12 +1,11 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { getAllTasksByProject } from "../handlers/get-tasks-by-project";
 import { prisma } from "../../../lib/prisma";
-import { requestUser } from "../../../utils/request-user.type";
-import { parseSchema } from "../../../utils/parse-schema";
 import { getTasksByProjectParamsSchema } from "../dtos/get-tasks-by-project.dto";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function getAllTasksRoute(app: FastifyInstance) {
-	app.get(
+	app.withTypeProvider<ZodTypeProvider>().get(
 		"/project/:projectId/tasks",
 		{
 			onRequest: [app.authenticate],
@@ -17,23 +16,18 @@ export async function getAllTasksRoute(app: FastifyInstance) {
 				summary: "Get all project tasks",
 			},
 		},
-		getAllTasksHandler,
+		async (request, reply) => {
+			const params = request.params;
+			const user = request.user;
+
+			const task = await getAllTasksByProject(
+				{ ...params, userId: user.id },
+				prisma,
+			);
+
+			reply.status(200).send({
+				data: task,
+			});
+		},
 	);
-}
-
-async function getAllTasksHandler(
-	request: FastifyRequest,
-	reply: FastifyReply,
-) {
-	const params = parseSchema(getTasksByProjectParamsSchema, request.params);
-	const user = parseSchema(requestUser, request.user);
-
-	const task = await getAllTasksByProject(
-		{ ...params, userId: user.id },
-		prisma,
-	);
-
-	reply.status(200).send({
-		data: task,
-	});
 }
