@@ -24,7 +24,7 @@ export async function createProjectRoute(app: FastifyInstance) {
 	);
 }
 
-async function createProjectHandler(
+export async function createProjectHandler(
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) {

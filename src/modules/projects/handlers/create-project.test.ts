@@ -3,9 +3,8 @@ import { createProject } from "./create-project";
 import prisma from "../../../lib/__mocks__/prisma";
 import { createUserFactory } from "../../../test/factory/user.factory";
 import { ClientError } from "../../../errors/client-error";
-import { ServerError } from "../../../errors/server.error";
 
-describe("Create project test case", () => {
+describe("Create project unit test case", () => {
 	it("Should create a project successfully", async () => {
 		prisma.users.findUnique.mockResolvedValue(
 			createUserFactory({ id: "user-id" }),
