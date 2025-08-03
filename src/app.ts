@@ -17,7 +17,6 @@ import {
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
-import z from "zod/v4";
 
 const app = fastify({
 	requestTimeout: 100000,
