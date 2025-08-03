@@ -6,9 +6,10 @@ import { prisma } from "../../../lib/prisma";
 import { ServerError } from "../../../errors/server.error";
 import { parseSchema } from "../../../utils/parse-schema";
 import { deleteProjectParams } from "../dtos/delete-project.dto";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function deleteProjectRoute(app: FastifyInstance) {
-	app.delete(
+	app.withTypeProvider<ZodTypeProvider>().delete(
 		"/project/:projectId",
 		{
 			onRequest: [app.authenticate],
@@ -20,22 +21,17 @@ export async function deleteProjectRoute(app: FastifyInstance) {
 				description: "Delete a project in database",
 			},
 		},
-		deleteProjectHandler,
+		async (request, reply) => {
+			const user = request.user;
+			const params = request.params;
+
+			try {
+				await deleteProject({ ...params, userId: user.id }, prisma);
+				return reply.status(200).send();
+			} catch (error) {
+				console.log(error);
+				throw new ServerError("An error occurred");
+			}
+		},
 	);
-}
-
-async function deleteProjectHandler(
-	this: FastifyInstance,
-	request: FastifyRequest,
-	reply: FastifyReply,
-) {
-	const user = parseSchema(requestUser, request.user);
-	const params = parseSchema(deleteProjectParams, request.params);
-
-	try {
-		await deleteProject({ ...params, userId: user.id }, prisma);
-		return reply.status(200);
-	} catch (error) {
-		throw new ServerError("An error occurred");
-	}
 }

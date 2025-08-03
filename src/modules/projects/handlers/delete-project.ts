@@ -7,6 +7,7 @@ export async function deleteProject(
 	data: RequestUser & DeleteProjectParams,
 	db: PrismaClient,
 ): Promise<void> {
+	console.log("esta na funcao interna");
 	const user = await db.users.findUnique({
 		where: {
 			id: data.userId,
@@ -22,8 +23,10 @@ export async function deleteProject(
 			id: data.projectId,
 		},
 	});
+	console.log(project);
 
 	if (!project) {
+		console.log("Projeto nao existe mais");
 		return;
 	}
 
@@ -36,5 +39,6 @@ export async function deleteProject(
 			id: data.projectId,
 		},
 	});
+
 	return;
 }

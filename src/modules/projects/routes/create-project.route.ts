@@ -5,9 +5,10 @@ import { ServerError } from "../../../errors/server.error";
 import { requestUser } from "../../../utils/request-user.type";
 import { parseSchema } from "../../../utils/parse-schema";
 import { createProjectBodySchema } from "../dtos/create-project.dto";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function createProjectRoute(app: FastifyInstance) {
-	app.post(
+	app.withTypeProvider<ZodTypeProvider>().post(
 		"/project",
 		{
 			onRequest: [app.authenticate],
@@ -20,24 +21,22 @@ export async function createProjectRoute(app: FastifyInstance) {
 					"creates a new project connected with the user by passing jwt token, requires Authorization Header Authorization: Bearer <token>",
 			},
 		},
-		createProjectHandler,
+		async (request, reply) => {
+			try {
+				const body = request.body;
+				const user = request.user;
+
+				const project = await createProject(
+					{ ...body, userId: user.id },
+					prisma,
+				);
+
+				return reply
+					.status(201)
+					.send({ message: "project created with success", data: project });
+			} catch (error) {
+				throw new ServerError("Could'nt create project");
+			}
+		},
 	);
-}
-
-export async function createProjectHandler(
-	request: FastifyRequest,
-	reply: FastifyReply,
-) {
-	try {
-		const body = parseSchema(createProjectBodySchema, request.body);
-		const user = parseSchema(requestUser, request.user);
-
-		const project = await createProject({ ...body, userId: user.id }, prisma);
-
-		return reply
-			.status(201)
-			.send({ message: "project created with success", data: project });
-	} catch (error) {
-		throw new ServerError("Could'nt create project");
-	}
 }
