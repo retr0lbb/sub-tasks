@@ -6,3 +6,15 @@ export const createProjectBodySchema = z.object({
 });
 
 export type CreateProjectBody = z.infer<typeof createProjectBodySchema>;
+
+export const createProjectResponse = {
+	201: z.object({
+		message: z.string(),
+		data: z.object({
+			description: z.string(),
+			name: z.string(),
+			id: z.string(),
+			userId: z.string().nullable(),
+		}),
+	}),
+};

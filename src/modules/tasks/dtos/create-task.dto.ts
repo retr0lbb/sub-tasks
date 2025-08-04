@@ -4,7 +4,7 @@ export const createTaskBodySchema = z.object({
 	title: z
 		.string()
 		.min(3, { message: "Title should be minimum 3 chars length" }),
-	parentId: z.string().uuid({ message: "ParentId must be an UUID" }).nullish(),
+	parentId: z.uuidv4({ message: "ParentId must be an UUID" }).nullish(),
 	description: z.string().nullish(),
 });
 

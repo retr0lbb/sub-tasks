@@ -1,7 +1,7 @@
 import type { PrismaClient } from "@prisma/client";
 import { ClientError } from "../errors/client-error";
 
-interface TaskWithSubtasks {
+export interface TaskWithSubtasks {
 	id: string;
 	description: string | null;
 	title: string;

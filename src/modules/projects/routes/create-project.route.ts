@@ -1,10 +1,11 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyInstance } from "fastify";
 import { createProject } from "../handlers/create-project";
 import { prisma } from "../../../lib/prisma";
 import { ServerError } from "../../../errors/server.error";
-import { requestUser } from "../../../utils/request-user.type";
-import { parseSchema } from "../../../utils/parse-schema";
-import { createProjectBodySchema } from "../dtos/create-project.dto";
+import {
+	createProjectBodySchema,
+	createProjectResponse,
+} from "../dtos/create-project.dto";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function createProjectRoute(app: FastifyInstance) {
@@ -14,11 +15,12 @@ export async function createProjectRoute(app: FastifyInstance) {
 			onRequest: [app.authenticate],
 			schema: {
 				tags: ["Project"],
-				security: [{ bearerAuth: [] }],
-				body: createProjectBodySchema,
 				summary: "Creates a new project",
 				description:
 					"creates a new project connected with the user by passing jwt token, requires Authorization Header Authorization: Bearer <token>",
+				security: [{ bearerAuth: [] }],
+				body: createProjectBodySchema,
+				response: createProjectResponse,
 			},
 		},
 		async (request, reply) => {
