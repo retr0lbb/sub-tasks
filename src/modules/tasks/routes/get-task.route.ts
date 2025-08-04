@@ -1,14 +1,11 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { z } from "zod";
+import type { FastifyInstance } from "fastify";
 import { getTask } from "../handlers/get-task-handler";
 import { prisma } from "../../../lib/prisma";
-import { requestUser } from "../../../utils/request-user.type";
 import { getTaskParamsSchema } from "../dtos/get-task.dto";
-import { InputError } from "../../../errors/input-error";
-import { parseSchema } from "../../../utils/parse-schema";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function getTaskRoute(app: FastifyInstance) {
-	app.get(
+	app.withTypeProvider<ZodTypeProvider>().get(
 		"/project/:projectId/tasks/:taskId",
 		{
 			onRequest: [app.authenticate],
@@ -19,22 +16,20 @@ export async function getTaskRoute(app: FastifyInstance) {
 				description: "Get a specific tasks with its subtasks",
 			},
 		},
-		getTaskHandler,
+		async (request, reply) => {
+			const params = request.params;
+			const user = request.user;
+
+			try {
+				const task = await getTask({ ...params, userId: user.id }, prisma);
+
+				reply.status(200).send({
+					data: task,
+				});
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
 	);
-}
-
-async function getTaskHandler(request: FastifyRequest, reply: FastifyReply) {
-	try {
-		const params = parseSchema(getTaskParamsSchema, request.params);
-		const user = parseSchema(requestUser, request.user);
-
-		const task = await getTask({ ...params, userId: user.id }, prisma);
-
-		reply.status(200).send({
-			data: task,
-		});
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
 }

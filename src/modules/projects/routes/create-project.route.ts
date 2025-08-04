@@ -27,7 +27,7 @@ export async function createProjectRoute(app: FastifyInstance) {
 				const user = request.user;
 
 				const project = await createProject(
-					{ ...body, userId: user.id },
+					{ description: body.description, name: body.name, userId: user.id },
 					prisma,
 				);
 

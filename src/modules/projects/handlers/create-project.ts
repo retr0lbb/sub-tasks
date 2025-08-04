@@ -19,7 +19,7 @@ export async function createProject(
 
 	const project = await db.projects.create({
 		data: {
-			name: data.description,
+			name: data.name,
 			description: data.description,
 			userId: data.userId,
 		},

@@ -7,9 +7,10 @@ import {
 	updateTaskParamsSchema,
 } from "../dtos/update-task.dto";
 import { parseSchema } from "../../../utils/parse-schema";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function updateTaskRoute(app: FastifyInstance) {
-	app.put(
+	app.withTypeProvider<ZodTypeProvider>().put(
 		"/project/:projectId/tasks/:taskId",
 		{
 			onRequest: [app.authenticate],
@@ -22,22 +23,20 @@ export async function updateTaskRoute(app: FastifyInstance) {
 				params: updateTaskParamsSchema,
 			},
 		},
-		updateTaskHandler,
+		async (request, reply) => {
+			const body = request.body;
+			const params = request.params;
+			const user = request.user;
+
+			try {
+				await updateTask({ ...body, ...params, userId: user.id }, prisma);
+				return reply.status(200).send({
+					message: "task updated successfully!",
+				});
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
 	);
-}
-
-async function updateTaskHandler(request: FastifyRequest, reply: FastifyReply) {
-	try {
-		const body = parseSchema(updateTaskBodySchema, request.body);
-		const params = parseSchema(updateTaskParamsSchema, request.params);
-		const user = parseSchema(requestUser, request.user);
-
-		await updateTask({ ...body, ...params, userId: user.id }, prisma);
-		return reply.status(200).send({
-			message: "task updated successfully!",
-		});
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
 }
