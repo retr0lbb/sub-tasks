@@ -2,10 +2,10 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { registerUser } from "../handlers/register-user";
 import { prisma } from "../../../lib/prisma";
 import { registerBodySchema, RegisterBody } from "../dtos/register.dto";
-import { parseSchema } from "../../../utils/parse-schema";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function registerUserRoute(app: FastifyInstance) {
-	app.post(
+	app.withTypeProvider<ZodTypeProvider>().post(
 		"/auth/register",
 		{
 			schema: {
@@ -15,23 +15,18 @@ export async function registerUserRoute(app: FastifyInstance) {
 				body: registerBodySchema,
 			},
 		},
-		registerUserHandler,
+		async (request, reply) => {
+			const body = request.body;
+
+			try {
+				const createdUser = await registerUser({ ...body }, prisma);
+				return reply
+					.status(201)
+					.send({ message: "user created with success", id: createdUser.id });
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
 	);
-}
-
-async function registerUserHandler(
-	request: FastifyRequest,
-	reply: FastifyReply,
-) {
-	const body = parseSchema(registerBodySchema, request.body);
-
-	try {
-		const createdUser = await registerUser({ ...body }, prisma);
-		return reply
-			.status(201)
-			.send({ message: "user created with success", id: createdUser.id });
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
 }

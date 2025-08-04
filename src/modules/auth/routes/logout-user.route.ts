@@ -3,9 +3,10 @@ import { requestUser } from "../../../utils/request-user.type";
 import { LogOutUser } from "../handlers/logout-user";
 import { prisma } from "../../../lib/prisma";
 import { parseSchema } from "../../../utils/parse-schema";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function LogOutUserRoute(app: FastifyInstance) {
-	app.post(
+	app.withTypeProvider<ZodTypeProvider>().post(
 		"/auth/logout",
 		{
 			onRequest: [app.authenticate],
@@ -16,20 +17,18 @@ export async function LogOutUserRoute(app: FastifyInstance) {
 					"Disconnects User with his session and invalidates all refresh tokens in this section",
 			},
 		},
-		LogOutUserHandler,
+		async (request, reply) => {
+			const user = request.user;
+
+			try {
+				await LogOutUser(user.id, prisma);
+				reply
+					.status(200)
+					.send({ message: "Logged out of all accounts All accounts" });
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
 	);
-}
-
-async function LogOutUserHandler(request: FastifyRequest, reply: FastifyReply) {
-	const user = parseSchema(requestUser, request.user);
-
-	try {
-		await LogOutUser(user.id, prisma);
-		reply
-			.status(200)
-			.send({ message: "Logged out of all accounts All accounts" });
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
 }

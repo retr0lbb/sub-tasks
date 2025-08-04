@@ -4,9 +4,10 @@ import { prisma } from "../../../lib/prisma";
 import { parseSchema } from "../../../utils/parse-schema";
 import { loginBodySchema } from "../dtos/login.dto";
 import { z } from "zod/v4";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function loginUserRoute(app: FastifyInstance) {
-	app.post(
+	app.withTypeProvider<ZodTypeProvider>().post(
 		"/auth/login",
 		{
 			schema: {
@@ -19,33 +20,27 @@ export async function loginUserRoute(app: FastifyInstance) {
 				},
 			},
 		},
-		loginUserHandler,
+		async (request, reply) => {
+			const body = request.body;
+
+			try {
+				const tokens = await loginUser(body, prisma, app);
+				reply.setCookie("refreshToken", tokens.refreshToken, {
+					path: "/",
+					httpOnly: true,
+					sameSite: "strict",
+					secure: false,
+					maxAge: 60 * 60 * 24 * 365,
+				});
+
+				return reply.status(200).send({
+					message: "user logged with success",
+					accessToken: tokens.accessToken,
+				});
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		},
 	);
-}
-
-async function loginUserHandler(
-	this: FastifyInstance,
-	request: FastifyRequest,
-	reply: FastifyReply,
-) {
-	const body = parseSchema(loginBodySchema, request.body);
-
-	try {
-		const tokens = await loginUser(body, prisma, this);
-		reply.setCookie("refreshToken", tokens.refreshToken, {
-			path: "/",
-			httpOnly: true,
-			sameSite: "strict",
-			secure: false,
-			maxAge: 60 * 60 * 24 * 365,
-		});
-
-		return reply.status(200).send({
-			message: "user logged with success",
-			accessToken: tokens.accessToken,
-		});
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
 }
