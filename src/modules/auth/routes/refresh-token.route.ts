@@ -4,6 +4,7 @@ import { prisma } from "../../../lib/prisma";
 import { parseSchema } from "../../../utils/parse-schema";
 import { cookieSchema } from "../dtos/cookie.schema";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
+import { refreshTokenResponse } from "../dtos/refresh-token.dto";
 
 export async function refreshTokenRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(
@@ -13,6 +14,7 @@ export async function refreshTokenRoute(app: FastifyInstance) {
 				tags: ["Auth"],
 				summary: "Refresh user's JWT token",
 				description: "Revalidates users JWT token using HttpOnly token",
+				response: refreshTokenResponse,
 			},
 		},
 		async (request, reply) => {
@@ -25,7 +27,7 @@ export async function refreshTokenRoute(app: FastifyInstance) {
 					prisma,
 				);
 
-				return reply.status(200).send({ accessToken });
+				return reply.status(200).send({ token: accessToken });
 			} catch (error) {
 				console.log(error);
 				throw error;

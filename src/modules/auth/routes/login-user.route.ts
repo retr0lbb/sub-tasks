@@ -1,9 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { loginUser } from "../handlers/login-user";
 import { prisma } from "../../../lib/prisma";
-import { parseSchema } from "../../../utils/parse-schema";
-import { loginBodySchema } from "../dtos/login.dto";
-import { z } from "zod/v4";
+import { loginBodySchema, loginResponse } from "../dtos/login.dto";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export async function loginUserRoute(app: FastifyInstance) {
@@ -15,9 +13,7 @@ export async function loginUserRoute(app: FastifyInstance) {
 				description: "Validade Login from an existing user",
 				summary: "Login existing user",
 				body: loginBodySchema,
-				response: {
-					200: z.object({ message: z.string(), accessToken: z.string() }),
-				},
+				response: loginResponse,
 			},
 		},
 		async (request, reply) => {
@@ -35,7 +31,7 @@ export async function loginUserRoute(app: FastifyInstance) {
 
 				return reply.status(200).send({
 					message: "user logged with success",
-					accessToken: tokens.accessToken,
+					token: tokens.accessToken,
 				});
 			} catch (error) {
 				console.log(error);
