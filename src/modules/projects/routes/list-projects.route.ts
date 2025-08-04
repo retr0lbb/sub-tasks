@@ -4,6 +4,7 @@ import { listUserProjects } from "../handlers/list-user-projects";
 import { prisma } from "../../../lib/prisma";
 import { parseSchema } from "../../../utils/parse-schema";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
+import { ListProjectsResponse } from "../dtos/list-projects.dto";
 
 export async function listUserProjectsRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(
@@ -15,6 +16,7 @@ export async function listUserProjectsRoute(app: FastifyInstance) {
 				security: [{ bearerAuth: [] }],
 				summary: "List all user's projects",
 				description: "List all user projects",
+				response: ListProjectsResponse,
 			},
 		},
 		async (request, reply) => {

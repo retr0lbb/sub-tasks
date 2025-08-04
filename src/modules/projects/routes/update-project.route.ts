@@ -6,6 +6,7 @@ import { parseSchema } from "../../../utils/parse-schema";
 import {
 	updateBodySchema,
 	updateParamsSchema,
+	updateProjectResponse,
 } from "../dtos/update-project.dto";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
@@ -17,10 +18,11 @@ export async function updateProjectRoute(app: FastifyInstance) {
 			schema: {
 				tags: ["Project"],
 				security: [{ bearerAuth: [] }],
-				body: updateBodySchema,
-				params: updateParamsSchema,
 				summary: "Updates an existing user project",
 				description: "Updates an existing user project",
+				body: updateBodySchema,
+				params: updateParamsSchema,
+				response: updateProjectResponse,
 			},
 		},
 		async (request, reply) => {

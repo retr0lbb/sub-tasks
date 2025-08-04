@@ -9,5 +9,17 @@ export const updateParamsSchema = z.object({
 	projectId: z.string().uuid(),
 });
 
+export const updateProjectResponse = {
+	200: z.object({
+		message: z.string(),
+		data: z.object({
+			description: z.string(),
+			id: z.string(),
+			name: z.string(),
+			userId: z.uuid().nullable(),
+		}),
+	}),
+};
+
 export type UpdateBody = z.infer<typeof updateBodySchema>;
 export type UpdateParams = z.infer<typeof updateParamsSchema>;
