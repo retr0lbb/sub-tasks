@@ -14,7 +14,9 @@ export async function createProject(
 	});
 
 	if (!user) {
-		throw new ClientError("User doesn't exists");
+		throw new ClientError("User with this id don't exists", {
+			id: data.userId,
+		});
 	}
 
 	const project = await db.projects.create({
