@@ -29,6 +29,10 @@ export async function recursiveGetSubtasks(
 		};
 	}
 
+	if (depth >= 10_000) {
+		throw new Error("Recursion Limit achieved");
+	}
+
 	const subtasks =
 		(await db.tasks.findMany({
 			where: {
