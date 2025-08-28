@@ -43,7 +43,7 @@ export async function getTask(
 		throw new ClientError("Task not found");
 	}
 
-	const tasksWithSubtasks = await recursiveGetSubtasks(db, task);
+	const tasksWithSubtasks = await recursiveGetSubtasks(db, task, 10_000);
 
 	return tasksWithSubtasks;
 }
