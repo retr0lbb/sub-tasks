@@ -1,10 +1,11 @@
 {
 	"name": "subtask",
 	"version": "1.0.0",
-	"main": "index.js",
+	"main": "./dist/server.js",
 	"scripts": {
 		"dev": "tsx watch --env-file=.env src/server.ts",
-		"start": "tsup",
+		"start": "node .",
+		"build": "tsc --build",
 		"test": "vitest"
 	},
 	"author": "",
