@@ -15,7 +15,7 @@ At present, this project is a good ol’ Node.js API, but hold onto your hats! T
 - [✅] Validação de dados com biblioteca dedicada (ex: Zod, Joi)
 - [✅] Logs estruturados e centralizados com Pino
 - [ ] Pipeline de CI/CD com testes e lint via GitHub Actions
-- [ ] Documentação automática da API com Swagger
+- [✅] Documentação automática da API com Swagger
 - [✅] Testes automatizados Unitarios
 - [ ] Healthcheck para monitoramento da API
 

@@ -1,5 +1,4 @@
 import z from "zod/v4";
-import type { TaskWithSubtasks } from "../../../utils/iterate-over-subtasks";
 
 export const getTasksByProjectParamsSchema = z.object({
 	projectId: z.string().uuid(),
@@ -18,6 +17,17 @@ const TaskSchema = z.object({
 const taskWithSubtask = TaskSchema.extend({
 	subTasks: z.array(TaskSchema),
 });
+
+export const getTasksByProjectQuerySchema = z.object({
+	order: z.literal("desc").or(z.literal("asc")).optional().default("asc"),
+	max_recursion_depth: z.coerce.number().min(0).max(10_000).optional(),
+	page: z.coerce.number().positive().default(1).optional(),
+	per_page: z.coerce.number().positive().default(10).optional(),
+});
+
+export type GetTasksByProjectQuery = z.infer<
+	typeof getTasksByProjectQuerySchema
+>;
 
 export const getTasksByProjectResponse = {
 	200: z.object({

@@ -1,11 +1,15 @@
 import { ClientError } from "../../../errors/client-error";
 import type { PrismaClient } from "@prisma/client";
 import { recursiveGetSubtasks } from "../../../utils/iterate-over-subtasks";
-import type { GetTasksByProjectParams } from "../dtos/get-tasks-by-project.dto";
+import type {
+	GetTasksByProjectParams,
+	GetTasksByProjectQuery,
+} from "../dtos/get-tasks-by-project.dto";
 import type { RequestUser } from "../../../utils/request-user.type";
 
 export async function getAllTasksByProject(
 	data: GetTasksByProjectParams & RequestUser,
+	options: GetTasksByProjectQuery,
 	db: PrismaClient,
 ) {
 	const project = await db.projects.findUnique({
@@ -40,6 +44,12 @@ export async function getAllTasksByProject(
 		omit: {
 			projectId: true,
 		},
+		take: options.per_page,
+		skip:
+			options.page && options.per_page && (options.page - 1) * options.per_page,
+		orderBy: {
+			createdAt: options.order,
+		},
 	});
 
 	if (topLevelTasks.length === 0) {
@@ -48,7 +58,11 @@ export async function getAllTasksByProject(
 
 	const allTasks = await Promise.all(
 		topLevelTasks.map(async (task) => {
-			return await recursiveGetSubtasks(db, task);
+			return await recursiveGetSubtasks(
+				db,
+				task,
+				options.max_recursion_depth ?? 10_000,
+			);
 		}),
 	);
 	return allTasks;

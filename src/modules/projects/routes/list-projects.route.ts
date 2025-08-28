@@ -16,7 +16,7 @@ export async function listUserProjectsRoute(app: FastifyInstance) {
 				security: [{ bearerAuth: [] }],
 				summary: "List all user's projects",
 				description: "List all user projects",
-				response: ListProjectsResponse,
+				response: null,
 			},
 		},
 		async (request, reply) => {

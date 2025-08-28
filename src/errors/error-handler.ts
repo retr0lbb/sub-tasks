@@ -1,10 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { ZodError } from "zod";
-import { ClientError } from "./client-error";
-import { ServerError } from "./server.error";
-import { InputError } from "./input-error";
-import { NotFoundError } from "./not-found-error";
-import { ForbiddenError } from "./forbidden-error";
+import { ZodError } from "zod/v4";
 import { AppError } from "./_App-error";
 
 type FastifyErrorHandler = FastifyInstance["errorHandler"];
@@ -15,6 +10,15 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
 		return reply.status(400).send({
 			message: "invalid input value",
 			error: error.flatten().fieldErrors,
+		});
+	}
+
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	if ((error as any).validation) {
+		return reply.status(400).send({
+			message: "invalid input value",
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			error: (error as any).validation,
 		});
 	}
 

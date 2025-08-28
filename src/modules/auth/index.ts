@@ -5,6 +5,7 @@ import { refreshTokenRoute } from "./routes/refresh-token.route";
 import { LogOutUserRoute } from "./routes/logout-user.route";
 
 export async function userModule(app: FastifyInstance) {
+	console.log("it reads here");
 	app.register(registerUserRoute);
 	app.register(loginUserRoute);
 	app.register(refreshTokenRoute);

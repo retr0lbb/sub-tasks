@@ -11,7 +11,6 @@ import cors from "@fastify/cors";
 import {
 	validatorCompiler,
 	serializerCompiler,
-	jsonSchemaTransform,
 	createJsonSchemaTransform,
 } from "fastify-type-provider-zod";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
@@ -66,6 +65,7 @@ app.register(swagger, {
 app.register(swaggerUi, {
 	routePrefix: "/docs",
 });
+console.log("it passed Here");
 
 app.register(userModule);
 app.register(taskModule);

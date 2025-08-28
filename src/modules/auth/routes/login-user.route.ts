@@ -18,6 +18,7 @@ export async function loginUserRoute(app: FastifyInstance) {
 		},
 		async (request, reply) => {
 			const body = request.body;
+			console.log("it passed here");
 
 			try {
 				const tokens = await loginUser(body, prisma, app);
