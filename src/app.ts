@@ -16,6 +16,7 @@ import {
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
+import { HealthCheckRoute } from "./modules/health-check.route";
 
 const app = fastify({
 	requestTimeout: 100000,
@@ -65,10 +66,10 @@ app.register(swagger, {
 app.register(swaggerUi, {
 	routePrefix: "/docs",
 });
-console.log("it passed Here");
 
 app.register(userModule);
 app.register(taskModule);
 app.register(projectModule);
+app.register(HealthCheckRoute);
 
 export { app };

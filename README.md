@@ -17,7 +17,7 @@ At present, this project is a good ol’ Node.js API, but hold onto your hats! T
 - [ ] Pipeline de CI/CD com testes e lint via GitHub Actions
 - [✅] Documentação automática da API com Swagger
 - [✅] Testes automatizados Unitarios
-- [ ] Healthcheck para monitoramento da API
+- [✅] Healthcheck para monitoramento da API
 
 ### ✅ Em andamento / Planejadas (backend best practices)
 
@@ -30,5 +30,5 @@ At present, this project is a good ol’ Node.js API, but hold onto your hats! T
 - [ ] Histórico de alterações nas tarefas
 - [ ] Compartilhamento de tarefas entre usuários
 - [ ] Notificações (e-mail ou webhook) ao completar tarefas
-- [ ] Ordenação manual das subtasks
+- [✅] Ordenação manual das subtasks
 - [ ] Redis para armazenar os ancestrais de arvores de tasks, permitindo uso de cache

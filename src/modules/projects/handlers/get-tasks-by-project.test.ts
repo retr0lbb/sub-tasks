@@ -21,6 +21,7 @@ describe("Get Tasks by project", async () => {
 					projectId: "valid-project-id",
 					userId: "valid-user-id",
 				},
+				{ order: "asc", max_recursion_depth: 1000, page: 1, per_page: 10 },
 				prisma,
 			),
 		).resolves.toEqual([
@@ -49,6 +50,7 @@ describe("Get Tasks by project", async () => {
 					projectId: "valid-project-id",
 					userId: "valid-user-id",
 				},
+				{ order: "asc", max_recursion_depth: 1000, page: 1, per_page: 10 },
 				prisma,
 			),
 		).rejects.toThrowError("User is not the owner of the project");
@@ -64,6 +66,7 @@ describe("Get Tasks by project", async () => {
 					projectId: "valid-project-id",
 					userId: "valid-user-id",
 				},
+				{ order: "asc", max_recursion_depth: 1000, page: 1, per_page: 10 },
 				prisma,
 			),
 		).rejects.toThrowError("User not found");
@@ -78,6 +81,7 @@ describe("Get Tasks by project", async () => {
 					projectId: "valid-project-id",
 					userId: "valid-user-id",
 				},
+				{ order: "asc", max_recursion_depth: 1000, page: 1, per_page: 10 },
 				prisma,
 			),
 		).rejects.toThrowError("Project not found");
