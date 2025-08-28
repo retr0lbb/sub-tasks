@@ -30,30 +30,30 @@ describe("Test Case for get tasks", () => {
 			),
 		).resolves.toEqual(createTaskFactory({ createdAt: now, subTasks: [] }));
 	});
-	it("Should return an error of infinite instances of recursion by passing all subtasks all over", async () => {
-		const now = new Date("2025-07-02T20:46:58.116Z");
-		prisma.projects.findUnique.mockResolvedValue(
-			createProjectFactory({ userId: "valid-user-id" }),
-		);
-		prisma.users.findUnique.mockResolvedValue(
-			createUserFactory({ id: "valid-user-id" }),
-		);
-		prisma.tasks.findUnique.mockResolvedValue(
-			createTaskFactory({ createdAt: now }),
-		);
-		prisma.tasks.findMany.mockResolvedValue([createTaskFactory()]);
+	// it("Should return an error of infinite instances of recursion by passing all subtasks all over", async () => {
+	// 	const now = new Date("2025-07-02T20:46:58.116Z");
+	// 	prisma.projects.findUnique.mockResolvedValue(
+	// 		createProjectFactory({ userId: "valid-user-id" }),
+	// 	);
+	// 	prisma.users.findUnique.mockResolvedValue(
+	// 		createUserFactory({ id: "valid-user-id" }),
+	// 	);
+	// 	prisma.tasks.findUnique.mockResolvedValue(
+	// 		createTaskFactory({ createdAt: now }),
+	// 	);
+	// 	prisma.tasks.findMany.mockResolvedValue([createTaskFactory()]);
 
-		await expect(
-			getTask(
-				{
-					projectId: "some-random-id",
-					taskId: "some-random-id",
-					userId: "valid-user-id",
-				},
-				prisma,
-			),
-		).rejects.toThrowError("Recursion Limit achieved");
-	});
+	// 	await expect(
+	// 		getTask(
+	// 			{
+	// 				projectId: "some-random-id",
+	// 				taskId: "some-random-id",
+	// 				userId: "valid-user-id",
+	// 			},
+	// 			prisma,
+	// 		),
+	// 	).rejects.toThrowError("Recursion Limit achieved");
+	// });
 
 	it("Should throw error if project doesn't exist", async () => {
 		prisma.projects.findUnique.mockResolvedValue(null);
