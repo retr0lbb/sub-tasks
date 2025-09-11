@@ -3,14 +3,15 @@
 	"version": "1.0.0",
 	"main": "./dist/server.js",
 	"scripts": {
-		"dev": "tsx watch --env-file=.env src/server.ts",
+		"dev": "tsx watch --env-file=.env.local src/server.ts",
 		"start": "node --env-file=.env .",
-		"build": "prisma migrate deploy && tsc --build",
+		"migrate:deploy": "prisma migrate deploy",
+		"build": "tsc --build",
 		"test": "vitest"
 	},
-	"author": "",
+	"author": "retr0lbb",
+	"description": "Yet another tasklist project",
 	"license": "ISC",
-	"description": "",
 	"dependencies": {
 		"@fastify/cookie": "^11.0.2",
 		"@fastify/cors": "^11.0.1",
