@@ -9,6 +9,7 @@ const envSchema = z.object({
 	ENVIRONMENT: z.string().nonempty(),
 	FRONT_END_URL: z.string(),
 	DIRECT_URL: z.string().nonempty(),
+	PORT: z.coerce.number().positive(),
 });
 
 export const env = envSchema.parse(process.env);
