@@ -8,7 +8,7 @@ export const loginBodySchema = z.object({
 export const loginResponse = {
 	200: z.object({
 		message: z.string(),
-		token: z.jwt(),
+		csrfToken: z.string(),
 	}),
 };
 

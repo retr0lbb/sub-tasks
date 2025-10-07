@@ -9,6 +9,10 @@ export default fp(async (app) => {
 		sign: {
 			expiresIn: "1d",
 		},
+		cookie: {
+			cookieName: "@hyperbolic_tasks:access_token",
+			signed: false,
+		},
 	});
 
 	app.decorate(

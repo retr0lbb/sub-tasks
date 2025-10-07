@@ -29,6 +29,16 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
 			details: error.details,
 		});
 	}
+
+	// biome-ignore lint/suspicious/noExplicitAny: <no need>
+	if ((error as any).code === "FST_CSRF_INVALID_TOKEN") {
+		request.log.warn({ err: error }, "CSRF token validation failed");
+		return reply.status(403).send({
+			error: "Forbidden",
+			message: "Invalid CSRF token",
+		});
+	}
+
 	request.log.error(
 		{
 			err: {
@@ -39,6 +49,9 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
 		},
 		"Unhandled Error",
 	);
+
+	//worst case
+	console.log(error);
 
 	return reply.status(500).send({
 		error: "Internal Server Error",

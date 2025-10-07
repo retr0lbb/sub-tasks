@@ -12,7 +12,7 @@ export async function createProjectRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().post(
 		"/project",
 		{
-			onRequest: [app.authenticate],
+			onRequest: [app.authenticate, app.csrfProtection],
 			schema: {
 				tags: ["Project"],
 				summary: "Creates a new project",
