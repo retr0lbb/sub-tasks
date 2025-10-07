@@ -1,7 +1,7 @@
 import fastify from "fastify";
 import { errorHandler } from "./errors/error-handler";
 import jwtPlugin from "./lib/jwt-plugin";
-import { userModule } from "./modules/auth";
+import { authModule } from "./modules/auth";
 import { taskModule } from "./modules/tasks";
 import { projectModule } from "./modules/projects";
 import cookie from "@fastify/cookie";
@@ -17,6 +17,7 @@ import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import { HealthCheckRoute } from "./modules/health-check.route";
+import { userModule } from "./modules/user";
 
 const app = fastify({
 	requestTimeout: 100000,
@@ -67,9 +68,10 @@ app.register(swaggerUi, {
 	routePrefix: "/docs",
 });
 
-app.register(userModule);
+app.register(authModule);
 app.register(taskModule);
 app.register(projectModule);
 app.register(HealthCheckRoute);
+app.register(userModule);
 
 export { app };
