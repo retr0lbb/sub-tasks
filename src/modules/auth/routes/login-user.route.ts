@@ -18,21 +18,34 @@ export async function loginUserRoute(app: FastifyInstance) {
 		},
 		async (request, reply) => {
 			const body = request.body;
-			console.log("it passed here");
 
 			try {
 				const tokens = await loginUser(body, prisma, app);
-				reply.setCookie("refreshToken", tokens.refreshToken, {
+				reply.setCookie(
+					"@hyperbolic_tasks:refresh_token",
+					tokens.refreshToken,
+					{
+						path: "/",
+						httpOnly: true,
+						sameSite: "strict",
+						secure: true,
+						maxAge: 60 * 60 * 24 * 365, // A Year
+					},
+				);
+
+				reply.setCookie("@hyperbolic_tasks:access_token", tokens.accessToken, {
 					path: "/",
 					httpOnly: true,
 					sameSite: "strict",
-					secure: false,
-					maxAge: 60 * 60 * 24 * 365,
+					secure: true,
+					maxAge: 60 * 60 * 24, // A day
 				});
+
+				const csrfToken = reply.generateCsrf();
 
 				return reply.status(200).send({
 					message: "user logged with success",
-					token: tokens.accessToken,
+					csrfToken: csrfToken,
 				});
 			} catch (error) {
 				console.log(error);
