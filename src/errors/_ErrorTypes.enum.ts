@@ -6,4 +6,5 @@ export enum ErrorTypes {
 	UnprocessableEntity = "UnprocessableEntityError",
 	InternalServer = "InternalServerError",
 	Validation = "ValidationError",
+	CSRFTOKEN_INVALID = "Invalid Token",
 }
