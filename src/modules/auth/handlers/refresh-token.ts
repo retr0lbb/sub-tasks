@@ -7,6 +7,8 @@ export async function refreshToken(
 	app: FastifyInstance,
 	db: PrismaClient,
 ) {
+	console.log(token);
+
 	const userSession = await db.sessions.findUnique({
 		where: {
 			refreshToken: token,

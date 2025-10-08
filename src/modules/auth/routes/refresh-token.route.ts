@@ -5,6 +5,9 @@ import { parseSchema } from "../../../utils/parse-schema";
 import { cookieSchema } from "../dtos/cookie.schema";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { refreshTokenResponse } from "../dtos/refresh-token.dto";
+import { Unauthorized } from "../../../errors/unauthorized";
+import { ServerError } from "../../../errors/server.error";
+import { env } from "../../../utils/env";
 
 export async function refreshTokenRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(
@@ -18,16 +21,32 @@ export async function refreshTokenRoute(app: FastifyInstance) {
 			},
 		},
 		async (request, reply) => {
-			const cookie = parseSchema(cookieSchema, request.cookies);
+			const refreshCookie = request.cookies["@hyperbolic_tasks:refresh_token"];
+
+			if (!refreshCookie) {
+				throw new Unauthorized("Refresh token not found");
+			}
 
 			try {
-				const { accessToken } = await refreshToken(
-					cookie.refreshToken,
-					app,
-					prisma,
-				);
+				const { accessToken } = await refreshToken(refreshCookie, app, prisma);
 
-				return reply.status(200).send({ token: accessToken });
+				if (!accessToken) {
+					throw new ServerError(
+						"Something went wrong while generating a new token",
+					);
+				}
+
+				reply.setCookie(`${env.COOKIE_PREFIX}:access_token`, accessToken, {
+					path: "/",
+					httpOnly: true,
+					sameSite: "strict",
+					secure: true,
+					maxAge: 60 * 60 * 24, // A day
+				});
+
+				return reply
+					.status(200)
+					.send({ message: "Token refresh with success" });
 			} catch (error) {
 				console.log(error);
 				throw error;

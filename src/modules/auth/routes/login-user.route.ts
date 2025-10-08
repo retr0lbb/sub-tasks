@@ -3,6 +3,7 @@ import { loginUser } from "../handlers/login-user";
 import { prisma } from "../../../lib/prisma";
 import { loginBodySchema, loginResponse } from "../dtos/login.dto";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
+import { env } from "../../../utils/env";
 
 export async function loginUserRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().post(
@@ -22,7 +23,7 @@ export async function loginUserRoute(app: FastifyInstance) {
 			try {
 				const tokens = await loginUser(body, prisma, app);
 				reply.setCookie(
-					"@hyperbolic_tasks:refresh_token",
+					`${env.COOKIE_PREFIX}:refresh_token`,
 					tokens.refreshToken,
 					{
 						path: "/",
@@ -33,13 +34,17 @@ export async function loginUserRoute(app: FastifyInstance) {
 					},
 				);
 
-				reply.setCookie("@hyperbolic_tasks:access_token", tokens.accessToken, {
-					path: "/",
-					httpOnly: true,
-					sameSite: "strict",
-					secure: true,
-					maxAge: 60 * 60 * 24, // A day
-				});
+				reply.setCookie(
+					`${env.COOKIE_PREFIX}:access_token`,
+					tokens.accessToken,
+					{
+						path: "/",
+						httpOnly: true,
+						sameSite: "strict",
+						secure: true,
+						maxAge: 60 * 60 * 24, // A day
+					},
+				);
 
 				const csrfToken = reply.generateCsrf();
 
