@@ -12,23 +12,22 @@ At present, this project is a good ol’ Node.js API, but hold onto your hats! T
 - [✅] can complete tasks
 - [✅] on task completion also completes subtasks
 - [✅] login system with sessions and jwt
-- [✅] Validação de dados com biblioteca dedicada (ex: Zod, Joi)
-- [✅] Logs estruturados e centralizados com Pino
-- [✅] Pipeline de CI/CD com testes e lint via GitHub Actions
-- [✅] Documentação automática da API com Swagger
-- [✅] Testes automatizados Unitarios
-- [✅] Healthcheck para monitoramento da API
+- [✅] Data validation using Zod
+- [✅] Logs using Pino 
+- [✅] Pipeline CI/CD with automated test by github actions
+- [✅] API documented using Swagger UI
+- [✅] Automated unity tests
+- [✅] Tokens Http-Only with CSRF protection
 
-### ✅ Em andamento / Planejadas (backend best practices)
+### ✅ In progress / Planning
 
-- [ ] Middleware global para tratamento de erros e respostas
-- [ ] Rate limiting por IP para segurança extra
+- [✅] Error handling with global error states
+- [ ] IP rate limiting
 
 ### ✨ Funcionalidades futuras
 
-- [ ] Organização de tarefas por projetos ou categorias
-- [ ] Histórico de alterações nas tarefas
-- [ ] Compartilhamento de tarefas entre usuários
-- [ ] Notificações (e-mail ou webhook) ao completar tarefas
-- [✅] Ordenação manual das subtasks
-- [ ] Redis para armazenar os ancestrais de arvores de tasks, permitindo uso de cache
+- [ ] Organize tasks by projects and/or category
+- [ ] History of Tasks changes and completions
+- [ ] Group Workspaces for lager projects
+- [ ] Email Queue for tasks and secure email check
+- [ ] Use Redis for cache in larger trees
