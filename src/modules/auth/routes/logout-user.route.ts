@@ -10,7 +10,7 @@ export async function LogOutUserRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().post(
 		"/auth/logout",
 		{
-			onRequest: [app.authenticate],
+			onRequest: [app.authenticate, app.csrfProtection],
 			schema: {
 				tags: ["Auth"],
 				summary: "Delete user's previous session.",

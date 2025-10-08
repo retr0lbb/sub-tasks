@@ -13,7 +13,7 @@ export async function updateTaskRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().put(
 		"/project/:projectId/tasks/:taskId",
 		{
-			onRequest: [app.authenticate],
+			onRequest: [app.authenticate, app.csrfProtection],
 			schema: {
 				tags: ["Tasks"],
 				summary: "Update a task",

@@ -9,7 +9,7 @@ export async function deleteProjectRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().delete(
 		"/project/:projectId",
 		{
-			onRequest: [app.authenticate],
+			onRequest: [app.authenticate, app.csrfProtection],
 			schema: {
 				tags: ["Project"],
 				security: [{ bearerAuth: [] }],

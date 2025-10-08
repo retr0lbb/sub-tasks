@@ -10,7 +10,7 @@ export async function deleteTaskRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().delete(
 		"/project/:projectId/tasks/:taskId",
 		{
-			onRequest: [app.authenticate],
+			onRequest: [app.authenticate, app.csrfProtection],
 			schema: {
 				tags: ["Tasks"],
 				params: deleteTaskParamsSchema,

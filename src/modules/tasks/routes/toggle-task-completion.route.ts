@@ -12,7 +12,7 @@ export async function toggleTaskCompletionRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().put(
 		"/project/:projectId/tasks/:taskId/complete",
 		{
-			onRequest: [app.authenticate],
+			onRequest: [app.authenticate, app.csrfProtection],
 			schema: {
 				tags: ["Tasks"],
 				summary: "mark as completed or uncompleted task and its subtasks",

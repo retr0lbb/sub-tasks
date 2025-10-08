@@ -14,7 +14,7 @@ export async function createTaskRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().post(
 		"/project/:projectId/tasks",
 		{
-			onRequest: [app.authenticate],
+			onRequest: [app.authenticate, app.csrfProtection],
 			schema: {
 				tags: ["Tasks"],
 				summary: "creates a new task",

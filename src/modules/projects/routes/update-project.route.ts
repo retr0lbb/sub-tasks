@@ -14,10 +14,9 @@ export async function updateProjectRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().put(
 		"/project/:projectId",
 		{
-			onRequest: [app.authenticate],
+			onRequest: [app.authenticate, app.csrfProtection],
 			schema: {
 				tags: ["Project"],
-				security: [{ bearerAuth: [] }],
 				summary: "Updates an existing user project",
 				description: "Updates an existing user project",
 				body: updateBodySchema,
