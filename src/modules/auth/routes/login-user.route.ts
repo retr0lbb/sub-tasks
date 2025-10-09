@@ -33,9 +33,8 @@ export async function loginUserRoute(app: FastifyInstance) {
 					{
 						path: "/",
 						httpOnly: true,
-						sameSite: "lax",
+						sameSite: "none",
 						secure: false,
-						domain: "sub-tasks.onrender.com	",
 						maxAge: 60 * 60 * 24 * 365, // A Year
 					},
 				);
@@ -46,9 +45,8 @@ export async function loginUserRoute(app: FastifyInstance) {
 					{
 						path: "/",
 						httpOnly: true,
-						sameSite: "lax",
+						sameSite: "none",
 						secure: false,
-						domain: "sub-tasks.onrender.com	",
 						maxAge: 60 * 60 * 24, // A day
 					},
 				);
