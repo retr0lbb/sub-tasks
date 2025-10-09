@@ -39,8 +39,8 @@ export async function refreshTokenRoute(app: FastifyInstance) {
 				reply.setCookie(`${env.COOKIE_PREFIX}:access_token`, accessToken, {
 					path: "/",
 					httpOnly: true,
-					sameSite: "strict",
-					secure: true,
+					sameSite: "lax",
+					secure: false,
 					maxAge: 60 * 60 * 24, // A day
 				});
 

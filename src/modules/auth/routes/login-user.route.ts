@@ -1,4 +1,9 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import {
+	FastifyError,
+	type FastifyInstance,
+	type FastifyReply,
+	type FastifyRequest,
+} from "fastify";
 import { loginUser } from "../handlers/login-user";
 import { prisma } from "../../../lib/prisma";
 import { loginBodySchema, loginResponse } from "../dtos/login.dto";
@@ -28,8 +33,8 @@ export async function loginUserRoute(app: FastifyInstance) {
 					{
 						path: "/",
 						httpOnly: true,
-						sameSite: "strict",
-						secure: true,
+						sameSite: "lax",
+						secure: false,
 						maxAge: 60 * 60 * 24 * 365, // A Year
 					},
 				);
@@ -40,8 +45,8 @@ export async function loginUserRoute(app: FastifyInstance) {
 					{
 						path: "/",
 						httpOnly: true,
-						sameSite: "strict",
-						secure: true,
+						sameSite: "lax",
+						secure: false,
 						maxAge: 60 * 60 * 24, // A day
 					},
 				);
