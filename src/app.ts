@@ -35,6 +35,7 @@ app.register(cookie, {
 });
 app.register(cors, {
 	origin: env.FRONT_END_URL,
+	credentials: true,
 });
 
 app.setSerializerCompiler(serializerCompiler);
