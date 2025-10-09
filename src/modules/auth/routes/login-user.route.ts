@@ -35,6 +35,7 @@ export async function loginUserRoute(app: FastifyInstance) {
 						httpOnly: true,
 						sameSite: "lax",
 						secure: false,
+						domain: ".onrender.com",
 						maxAge: 60 * 60 * 24 * 365, // A Year
 					},
 				);
@@ -47,6 +48,7 @@ export async function loginUserRoute(app: FastifyInstance) {
 						httpOnly: true,
 						sameSite: "lax",
 						secure: false,
+						domain: ".onrender.com",
 						maxAge: 60 * 60 * 24, // A day
 					},
 				);

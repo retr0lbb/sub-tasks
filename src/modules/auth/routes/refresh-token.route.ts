@@ -41,6 +41,7 @@ export async function refreshTokenRoute(app: FastifyInstance) {
 					httpOnly: true,
 					sameSite: "lax",
 					secure: false,
+					domain: ".onrender.com",
 					maxAge: 60 * 60 * 24, // A day
 				});
 
