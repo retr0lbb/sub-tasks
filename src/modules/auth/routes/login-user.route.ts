@@ -9,6 +9,8 @@ import { prisma } from "../../../lib/prisma";
 import { loginBodySchema, loginResponse } from "../dtos/login.dto";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { env } from "../../../utils/env";
+import { createCookie } from "../../../utils/create-cookie";
+import { refreshToken } from "../handlers/refresh-token";
 
 export async function loginUserRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().post(
@@ -27,29 +29,19 @@ export async function loginUserRoute(app: FastifyInstance) {
 
 			try {
 				const tokens = await loginUser(body, prisma, app);
-				reply.setCookie(
-					`${env.COOKIE_PREFIX}:refresh_token`,
-					tokens.refreshToken,
-					{
-						path: "/",
-						httpOnly: true,
-						sameSite: "none",
-						secure: false,
-						maxAge: 60 * 60 * 24 * 365, // A Year
-					},
-				);
 
-				reply.setCookie(
-					`${env.COOKIE_PREFIX}:access_token`,
-					tokens.accessToken,
-					{
-						path: "/",
-						httpOnly: true,
-						sameSite: "none",
-						secure: false,
-						maxAge: 60 * 60 * 24, // A day
-					},
-				);
+				createCookie({
+					reply: reply,
+					cookie: tokens.refreshToken,
+					cookieName: "refresh_token",
+					ExpirationInSeconds: 60 * 60 * 24 * 365, //a year bro
+				});
+
+				createCookie({
+					reply,
+					cookie: tokens.accessToken,
+					cookieName: "access_token",
+				}); // a day for default
 
 				const csrfToken = reply.generateCsrf();
 
