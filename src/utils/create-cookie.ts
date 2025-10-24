@@ -14,7 +14,7 @@ export async function createCookie(props: {
 			path: "/",
 			httpOnly: true,
 			sameSite: "none",
-			secure: false,
+			secure: env.IS_PROD === true, // só força secure em produção
 			maxAge: props.ExpirationInSeconds ?? 60 * 60 * 24, // A day or something
 		},
 	);
