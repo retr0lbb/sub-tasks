@@ -1,13 +1,11 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { refreshToken } from "../handlers/refresh-token";
 import { prisma } from "../../../lib/prisma";
-import { parseSchema } from "../../../utils/parse-schema";
-import { cookieSchema } from "../dtos/cookie.schema";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { refreshTokenResponse } from "../dtos/refresh-token.dto";
 import { Unauthorized } from "../../../errors/unauthorized";
 import { ServerError } from "../../../errors/server.error";
-import { env } from "../../../utils/env";
+import { createCookie } from "../../../utils/create-cookie";
 
 export async function refreshTokenRoute(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(
@@ -36,13 +34,11 @@ export async function refreshTokenRoute(app: FastifyInstance) {
 					);
 				}
 
-				reply.setCookie(`${env.COOKIE_PREFIX}:access_token`, accessToken, {
-					path: "/",
-					httpOnly: true,
-					sameSite: "none",
-					secure: false,
-					maxAge: 60 * 60 * 24, // A day
-				});
+				createCookie({
+					reply,
+					cookie: accessToken,
+					cookieName: "access_token",
+				}); // a day by default
 
 				return reply
 					.status(200)
