@@ -28,16 +28,17 @@ const app = fastify({
 app.setErrorHandler(errorHandler);
 
 app.register(jwtPlugin);
-app.register(fastifyCsrfProtection);
 app.register(cookie, {
 	secret: env.COOKIE_SECRET,
 	prefix: env.COOKIE_PREFIX,
+});
+app.register(fastifyCsrfProtection, {
+	cookieKey: "_csrf",
 });
 app.register(cors, {
 	origin: env.FRONT_END_URL,
 	credentials: true,
 });
-
 app.setSerializerCompiler(serializerCompiler);
 app.setValidatorCompiler(validatorCompiler);
 
