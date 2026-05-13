@@ -3,7 +3,7 @@ import { env } from "./utils/env";
 
 app
 	.listen({
-		port: Number(env.PORT) || 3333,
+		port: Number(env.PORT) || 3000,
 		host: "0.0.0.0",
 	})
 	.then(() => {
